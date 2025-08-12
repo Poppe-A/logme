@@ -1,0 +1,50 @@
+services:
+  db:
+    image: mysql:8.2
+    container_name: logme-mysql
+    ports:
+      - 33060:3306
+    volumes:
+      - logme-db:/var/lib/mysql
+      - ./scripts/db/:/docker-entrypoint-initdb.d/:ro
+    environment:
+      - TZ=Europe/Paris
+      - MYSQL_DATABASE=logme
+      - MYSQL_USER=logme-user
+      - MYSQL_PASSWORD=password
+      - MYSQL_ROOT_PASSWORD=root
+      - DEFAULT_AUTHENTICATION_PLUGIN=mysql_native_password
+    restart: unless-stopped
+
+  back:
+    build:
+      context: ./apps/backend
+      dockerfile: Dockerfile
+    container_name: logme-back
+    ports:
+      - 3000:3000
+    env_file:
+      - ./apps/backend/.env
+    volumes:
+      - ./apps/backend/:/app
+      # - ./packages/shared:/app/apps/back/shared
+    # working_dir: /app/apps/backend
+    depends_on:
+      - db
+    command: sleep infinity
+
+  # front:
+  #   build:
+  #     context: .
+  #     dockerfile: docker/Dockerfile.base
+  #   container_name: gdd-front
+  #   ports:
+  #     - 5173:5173
+  #     - 4173:4173
+  #   volumes:
+  #     - .:/app
+  #   working_dir: /app/apps/front
+  #   command: sleep infinity
+
+volumes:
+  logme-db:
