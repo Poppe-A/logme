@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Exercise } from './exercise.entity';
 import { Repository } from 'typeorm';
-import { CreateExerciseDto } from './exercise.type';
+import { CreateOrUpdateExerciseDto } from './exercise.type';
 import { Sport } from '../sport/sport.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 
@@ -12,8 +12,12 @@ export class ExerciseService {
     private exerciseRepository: Repository<Exercise>,
   ) {}
 
+  findBySport(sportId: Sport['id']): Promise<Exercise[]> {
+    return this.exerciseRepository.find({ where: { sport: { id: sportId } } });
+  }
+
   async create(
-    createExerciseDto: CreateExerciseDto,
+    createExerciseDto: CreateOrUpdateExerciseDto,
     sportId: Sport['id'],
   ): Promise<Exercise[]> {
     await this.exerciseRepository.save({
@@ -23,7 +27,12 @@ export class ExerciseService {
     return this.findBySport(sportId);
   }
 
-  findBySport(sportId: Sport['id']): Promise<Exercise[]> {
-    return this.exerciseRepository.find({ where: { sport: { id: sportId } } });
+  async update(
+    sportId: Sport['id'],
+    exerciseId: Exercise['id'],
+    updateExerciseDto: CreateOrUpdateExerciseDto,
+  ): Promise<Exercise[]> {
+    await this.exerciseRepository.update({ id: exerciseId }, updateExerciseDto);
+    return this.findBySport(sportId);
   }
 }

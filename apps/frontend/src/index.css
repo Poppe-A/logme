@@ -13,6 +13,10 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
 a {
   font-weight: 500;
   color: #646cff;
@@ -28,6 +32,8 @@ body {
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
+  height: 100vh; 
+  /* TODO check if fine on mobile */
 }
 
 h1 {
@@ -42,12 +48,12 @@ button {
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
-  background-color: #1a1a1a;
+  /* background-color: #1a1a1a; */
   cursor: pointer;
   transition: border-color 0.25s;
 }
 button:hover {
-  border-color: #646cff;
+  /* border-color: #646cff; */
 }
 button:focus,
 button:focus-visible {

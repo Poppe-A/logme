@@ -6,10 +6,10 @@ export enum ExerciseType {
   DISTANCE = 'distance',
 }
 
-export interface CreateExerciseDto {
+export interface CreateOrUpdateExerciseDto {
   name: Exercise['name'];
   type: Exercise['type'];
   description?: Exercise['description'];
   altName?: Exercise['altName'];
-  secondAltName: Exercise['secondAltName'];
+  secondAltName?: Exercise['secondAltName'];
 }

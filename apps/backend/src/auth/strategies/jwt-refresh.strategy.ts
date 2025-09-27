@@ -16,7 +16,6 @@ export class JwtRefreshStrategy extends PassportStrategy(
       infer: true,
     });
 
-    console.log('jt refresh', jwtSecret);
     if (!jwtSecret) {
       throw new Error(
         "JWT_REFRESH_SECRET n'est pas défini dans la configuration.",
@@ -24,6 +23,7 @@ export class JwtRefreshStrategy extends PassportStrategy(
     }
     super({
       jwtFromRequest: (req: RequestWithMetadatas) => {
+        console.log('--refresh get token', req?.cookies);
         return req?.cookies?.refreshToken;
       },
       secretOrKey: jwtSecret,
@@ -32,15 +32,14 @@ export class JwtRefreshStrategy extends PassportStrategy(
   }
 
   validate(req: RequestWithMetadatas, payload: JwtPayload) {
+    console.log('--- refresh validate');
     // Vérification que refresh token correspond bien à utilisateur
     const refreshToken = req.cookies?.refreshToken;
-    console.log('Cookies:', req.cookies);
     // console.log('Extracted refresh token:', refreshTokenExtractor(req));
-    console.log('validate refresh strategy', refreshToken);
+    console.log('refresh token', refreshToken);
     if (!refreshToken) {
       throw new UnauthorizedException('Missing refresh token');
     }
-    console.log('after ');
     // ici tu peux valider en base que refreshToken est valide
     return { userId: payload.sub };
   }

@@ -41,7 +41,9 @@ export class AuthService {
     password: User['password'],
     response: Response,
   ) {
-    const user = await this.userService.findByEmail(email);
+    console.log('--- login method');
+    const user = await this.userService.findByEmail(email, true);
+    console.log('--- user ', user);
     if (!user) {
       throw new UnauthorizedException('Invalid credentials');
     }
@@ -53,17 +55,31 @@ export class AuthService {
     const { accessToken, refreshToken } = await this.generateAuthTokens(
       user.id,
     );
-    console.log('refre', refreshToken);
     this.setCookies(response, refreshToken);
 
-    return { accessToken };
+    return {
+      accessToken,
+      user: { firstname: user.firstname, lastname: user.lastname, id: user.id },
+    };
+  }
+
+  logout(res: Response) {
+    res.cookie('refreshToken', '', {
+      httpOnly: true,
+      // path: '/',
+      secure: false, // todo update for prod
+      sameSite: 'lax',
+      // maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
+      expires: new Date(0),
+    });
+
+    return;
   }
 
   async generateAuthTokens(userId: number): Promise<IAuthTokens> {
     const accessSecret = this.configService.get<string>('ACCESS_JWT_SECRET');
     const refreshSecret = this.configService.get<string>('REFRESH_JWT_SECRET');
 
-    console.log('--- accessSecret', refreshSecret);
     const [accessToken, refreshToken] = await Promise.all([
       this.jwtService.signAsync(
         { sub: userId },
@@ -78,31 +94,30 @@ export class AuthService {
   }
 
   private setCookies(res: Response, refreshToken: string) {
-    const commonOptions = {
-      httpOnly: true,
-      // secure: true, // todo update for prod
-      // sameSite: 'strict' as const,
-    };
-
-    console.log('setcoo');
     res.cookie('refreshToken', refreshToken, {
-      ...commonOptions,
-      path: '/auth/refresh',
+      httpOnly: true,
+      path: '/',
+      secure: false, // todo update for prod
+      sameSite: 'lax',
       maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
     });
-    // console.log('setcoo', res);
   }
 
   validateJwt(token: string): any {
     try {
       return this.jwtService.verify(token);
     } catch (e) {
-      console.log('--- err', e);
+      console.log('--- validate token err', e);
       return null;
     }
   }
 
   async refreshTokens(res: Response, userId: number) {
+    const user = await this.userService.findById(userId);
+
+    if (!user) {
+      throw new BadRequestException('User not existing');
+    }
     // 2. Valider le refresh token en base // todo token in service create guard
     // const valid = await this.isRefreshTokenValid(payload.sub, refreshToken);
     // if (!valid) {
@@ -110,15 +125,18 @@ export class AuthService {
     // }
 
     // 3. Générer et stocker les nouveaux tokens (rotation)
-    console.log('--- token ok');
     const { accessToken, refreshToken } = await this.generateAuthTokens(userId);
     // Mise à jour cookie avec nouveau refresh token
     res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
-      path: '/auth/refresh',
+      path: '/', // todo update for prod
+      secure: false,
       maxAge: 7 * 24 * 60 * 60 * 1000,
-      sameSite: 'strict',
+      sameSite: 'lax',
     });
-    return { accessToken };
+    return {
+      accessToken,
+      user: { firstname: user.firstname, lastname: user.lastname, id: user.id },
+    };
   }
 }

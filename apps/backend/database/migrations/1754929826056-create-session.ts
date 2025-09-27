@@ -24,8 +24,14 @@ export class CreateSession1754929826056 implements MigrationInterface {
           },
           { name: 'user_id', type: 'int' },
           { name: 'sport_id', type: 'int' },
-          { name: 'description', type: 'varchar', length: '100' },
-          { name: 'duration', type: 'int' },
+          {
+            name: 'description',
+            type: 'varchar',
+            length: '100',
+            isNullable: true,
+          },
+          { name: 'start_date', type: 'timestamp', default: 'NOW()' },
+          { name: 'end_date', type: 'date', isNullable: true },
         ],
       }),
     );
@@ -52,7 +58,8 @@ export class CreateSession1754929826056 implements MigrationInterface {
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropForeignKey('column', 'FK_session_user');
+    await queryRunner.dropForeignKey('session', 'FK_session_user');
+    await queryRunner.dropForeignKey('session', 'FK_session_sport');
 
     await queryRunner.dropTable('session');
   }

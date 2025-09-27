@@ -1,10 +1,12 @@
 import './App.css';
 import styled from '@emotion/styled';
 import { BrowserRouter } from 'react-router-dom';
+import { AppRouter } from './AppRouter';
+import { DeviceProvider } from './contexts/deviceProvider';
 
 const App = () => {
   const AppContainer = styled.div`
-    height: 100%;
+    height: 100vh;
     width: 100%;
     min-height: 100vh;
     display: flex;
@@ -12,10 +14,11 @@ const App = () => {
   `;
   return (
     <AppContainer>
-      <BrowserRouter></BrowserRouter>
-      <div>
-        <h1>cool</h1>
-      </div>
+      <DeviceProvider>
+        <BrowserRouter>
+          <AppRouter />
+        </BrowserRouter>
+      </DeviceProvider>
     </AppContainer>
   );
 };

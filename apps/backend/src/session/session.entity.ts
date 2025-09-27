@@ -3,11 +3,13 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   Unique,
 } from 'typeorm';
 import { User } from '../user/user.entity';
 import { Sport } from '../sport/sport.entity';
+import { SessionExercise } from '../sessionExercise/sessionExercise.entity';
 
 @Entity('session')
 @Unique(['id'])
@@ -15,11 +17,14 @@ export class Session {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: 'varchar', nullable: false })
+  @Column({ type: 'varchar' })
   name: string;
 
-  @Column({ type: 'date', nullable: false })
-  date: Date;
+  @Column({ name: 'start_date', type: 'date' })
+  startDate: Date;
+
+  @Column({ name: 'end_date', type: 'date', nullable: true })
+  endDate?: Date;
 
   @ManyToOne(() => User, (user) => user)
   @JoinColumn({ name: 'user_id' })
@@ -29,9 +34,12 @@ export class Session {
   @JoinColumn({ name: 'sport_id' })
   sport: Sport;
 
+  @OneToMany(
+    () => SessionExercise,
+    (sessionExercise) => sessionExercise.session,
+  )
+  sessionExercises: SessionExercise[];
+
   @Column({ type: 'varchar', nullable: true })
   description?: string;
-
-  @Column({ type: 'int', nullable: true })
-  duration?: number;
 }

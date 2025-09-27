@@ -2,7 +2,6 @@ import { Response, Request } from 'express';
 import {
   Body,
   Controller,
-  Get,
   HttpCode,
   HttpStatus,
   Post,
@@ -32,13 +31,20 @@ export class AuthController {
     @Body('password') password: string,
     @Res({ passthrough: true }) response: Response,
   ) {
-    console.log('---- contro', process.env.JWT_SECRET);
     return this.authService.login(email, password, response);
   }
 
-  @Get('test')
-  test() {
-    console.log('---- test');
+  @Post('logout') // todo voir si il faut des conditions pour logout
+  logout(@Res() res: Response) {
+    // Supprime le cookie en le mettant à blanc et en le faisant expirer
+    res.cookie('refreshToken', '', {
+      httpOnly: true,
+      secure: true, // à garder en prod (HTTPS)
+      sameSite: 'strict',
+      expires: new Date(0), // expire immédiatement
+    });
+
+    return res.send({ message: 'Logged out' });
   }
 
   @Public()
@@ -49,11 +55,12 @@ export class AuthController {
     @Req() req: RequestWithMetadatas,
     @Res({ passthrough: true }) res: Response,
   ) {
-    const { accessToken } = await this.authService.refreshTokens(
+    console.log('refresh route');
+    const { accessToken, user } = await this.authService.refreshTokens(
       res,
       req.user.userId,
     );
 
-    return { accessToken };
+    return { accessToken, user };
   }
 }

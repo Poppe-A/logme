@@ -33,18 +33,19 @@ services:
       - db
     command: sleep infinity
 
-  # front:
-  #   build:
-  #     context: .
-  #     dockerfile: docker/Dockerfile.base
-  #   container_name: gdd-front
-  #   ports:
-  #     - 5173:5173
-  #     - 4173:4173
-  #   volumes:
-  #     - .:/app
-  #   working_dir: /app/apps/front
-  #   command: sleep infinity
+  frontend:
+    build:
+      context: ./apps/frontend
+      dockerfile: Dockerfile
+    container_name: logme-front
+    volumes:
+      - ./apps/frontend/:/app
+       # - /app/node_modules
+    ports:
+      - 5173:5173
+      - 4173:4173
+    restart: on-failure:3
+    command: sleep infinity
 
 volumes:
   logme-db:

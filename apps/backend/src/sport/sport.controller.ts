@@ -1,7 +1,7 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
 import { SportService } from './sport.service';
 import { Sport } from './sport.entity';
-import { CreateSportDto } from './sport.types';
+import { CreateOrUpdateSportDto } from './sport.types';
 
 @Controller('sports')
 export class SportController {
@@ -13,8 +13,17 @@ export class SportController {
   }
 
   @Post()
-  createSport(@Body() createSportDto: CreateSportDto): Promise<Sport[]> {
-    console.log('ezfzef', createSportDto);
+  createSport(
+    @Body() createSportDto: CreateOrUpdateSportDto,
+  ): Promise<Sport[]> {
     return this.sportService.create(createSportDto);
+  }
+
+  @Patch('/:id')
+  updateSport(
+    @Body() updateSportDto: CreateOrUpdateSportDto,
+    @Param('id') id: Sport['id'],
+  ): Promise<Sport[]> {
+    return this.sportService.update(id, updateSportDto);
   }
 }

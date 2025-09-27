@@ -10,6 +10,8 @@ import { join } from 'path';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './auth/guards/auth.guard';
 import { ExerciseModule } from './exercise/exercise.module';
+import { SessionModule } from './session/session.module';
+import { SessionExerciseModule } from './sessionExercise/sessionExerciseModule';
 
 @Module({
   imports: [
@@ -43,6 +45,8 @@ import { ExerciseModule } from './exercise/exercise.module';
     AuthModule,
     SportModule,
     ExerciseModule,
+    SessionModule,
+    SessionExerciseModule,
   ],
   controllers: [AppController],
   providers: [
