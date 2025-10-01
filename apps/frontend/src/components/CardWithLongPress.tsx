@@ -1,5 +1,5 @@
 import React, { useRef, useState, type PropsWithChildren } from 'react';
-import { Card, type CardProps } from '@mui/material';
+import { ButtonBase, Card, styled, type CardProps } from '@mui/material';
 
 interface IButtonWithLongPress extends Omit<CardProps, 'onClick'> {
   onClick: () => void;
@@ -7,6 +7,12 @@ interface IButtonWithLongPress extends Omit<CardProps, 'onClick'> {
   longPressDelay?: number;
   children: React.ReactNode;
 }
+
+export const StyledCard = styled(Card)`
+  width: 100%;
+  align-items: center;
+  vertical-align: middle;
+`;
 
 export const CardWithLongPress: React.FC<
   PropsWithChildren<IButtonWithLongPress>
@@ -73,7 +79,6 @@ export const CardWithLongPress: React.FC<
     }
 
     if (!isLongPress && !moved.current) {
-      console.log('clcik 3');
       onClick();
     }
     setIsLongPress(false);
@@ -92,24 +97,26 @@ export const CardWithLongPress: React.FC<
   };
 
   return (
-    <Card
-      {...cardProps}
-      onTouchStart={handleStart}
-      onTouchEnd={e => handleEnd(e)}
-      onTouchCancel={handleCancel}
-      onTouchMove={handleMove}
-      onMouseDown={handleStart}
-      onMouseUp={handleEnd}
-      onMouseLeave={handleCancel}
-      sx={{
-        userSelect: 'none',
-        WebkitUserSelect: 'none',
-        WebkitTouchCallout: 'none',
-        ...cardProps.sx,
-      }}
-      elevation={0}
-    >
-      {children}
-    </Card>
+    <ButtonBase>
+      <StyledCard
+        {...cardProps}
+        onTouchStart={handleStart}
+        onTouchEnd={e => handleEnd(e)}
+        onTouchCancel={handleCancel}
+        onTouchMove={handleMove}
+        onMouseDown={handleStart}
+        onMouseUp={handleEnd}
+        onMouseLeave={handleCancel}
+        sx={{
+          userSelect: 'none',
+          WebkitUserSelect: 'none',
+          WebkitTouchCallout: 'none',
+          ...cardProps.sx,
+        }}
+        elevation={0}
+      >
+        {children}
+      </StyledCard>
+    </ButtonBase>
   );
 };

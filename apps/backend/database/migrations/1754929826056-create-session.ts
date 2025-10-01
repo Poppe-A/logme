@@ -43,6 +43,7 @@ export class CreateSession1754929826056 implements MigrationInterface {
         columnNames: ['user_id'],
         referencedColumnNames: ['id'],
         referencedTableName: 'user',
+        onDelete: 'CASCADE',
       }),
     );
 
@@ -53,6 +54,7 @@ export class CreateSession1754929826056 implements MigrationInterface {
         columnNames: ['sport_id'],
         referencedColumnNames: ['id'],
         referencedTableName: 'sport',
+        onDelete: 'CASCADE',
       }),
     );
   }

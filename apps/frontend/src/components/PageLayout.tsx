@@ -50,7 +50,6 @@ export const PageLayout: React.FC<PropsWithChildren<IPageLayout>> = ({
 }) => {
   const navigate = useNavigate();
   const handleBackClick = (e: React.MouseEvent) => {
-    console.log('Back button clicked');
     e.preventDefault();
     e.stopPropagation();
     navigate(-1);

@@ -27,6 +27,7 @@ const FormContainer = styled(Box)`
   display: flex;
   flex-direction: column;
   padding-inline: 1rem;
+  padding-bottom: 3rem;
   gap: 1rem;
 `;
 

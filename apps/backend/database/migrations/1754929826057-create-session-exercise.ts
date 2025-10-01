@@ -18,6 +18,7 @@ export class CreateSessionExercise1754929826057 implements MigrationInterface {
             isGenerated: true,
             generationStrategy: 'increment',
           },
+          { name: 'comment', type: 'text', isNullable: true },
           { name: 'session_id', type: 'int' },
           { name: 'exercise_id', type: 'int' },
         ],
@@ -31,6 +32,7 @@ export class CreateSessionExercise1754929826057 implements MigrationInterface {
         columnNames: ['session_id'],
         referencedColumnNames: ['id'],
         referencedTableName: 'session',
+        onDelete: 'CASCADE',
       }),
     );
 

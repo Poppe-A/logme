@@ -12,6 +12,7 @@ import { JwtAuthGuard } from './auth/guards/auth.guard';
 import { ExerciseModule } from './exercise/exercise.module';
 import { SessionModule } from './session/session.module';
 import { SessionExerciseModule } from './sessionExercise/sessionExerciseModule';
+import { SetModule } from './set/set.module';
 
 @Module({
   imports: [
@@ -47,6 +48,7 @@ import { SessionExerciseModule } from './sessionExercise/sessionExerciseModule';
     ExerciseModule,
     SessionModule,
     SessionExerciseModule,
+    SetModule,
   ],
   controllers: [AppController],
   providers: [

@@ -2,7 +2,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { PageLayout } from '../../components/PageLayout';
 import { useGetSportsQuery } from '../sport/sportApi';
 import { useEffect, useState } from 'react';
-import { Box, Drawer, styled, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 import {
   useCreateExerciseMutation,
   useGetExercisesQuery,
@@ -14,19 +14,7 @@ import { ExerciseForm } from './ExerciseForm';
 import { capitalizeFirstLetter } from '../../utils/format';
 import { ExerciseList } from './ExerciseList';
 import { MainActionButton } from '../../components/MainActionButton';
-
-const DrawerContentContainer = styled(Box)`
-  width: 100%;
-  min-height: 10rem;
-  display: flex;
-  flex-direction: column;
-  padding: 1rem;
-`;
-
-const DrawerContentLine = styled(Box)`
-  display: flex;
-  /* gap: 0.5rem; */
-`;
+import { ExerciseDrawer } from './ExerciseDrawer';
 
 export const ExercisePage: React.FC = () => {
   const params = useParams();
@@ -59,14 +47,11 @@ export const ExercisePage: React.FC = () => {
   };
 
   const displayContentDrawer = (exercise: Exercise | null) => {
-    console.log('-displa');
     setIsContentDrawerOpen(true);
     setSelectedExercise(exercise);
   };
 
   const closeContentDrawer = () => {
-    console.log('-close');
-
     setSelectedExercise(null);
     setIsContentDrawerOpen(false);
   };
@@ -106,30 +91,12 @@ export const ExercisePage: React.FC = () => {
         onSubmit={onSubmit}
         closeModal={closeEditionModal}
       />
-      <Drawer
-        anchor={'bottom'}
-        open={isContentDrawerOpen}
-        onClose={closeContentDrawer}
-      >
-        <DrawerContentContainer role="presentation">
-          <Typography>{`Exercice : ${selectedExercise?.name}`}</Typography>
-          {(selectedExercise?.altName || selectedExercise?.secondAltName) && (
-            <DrawerContentLine>
-              <Typography>Autres noms : </Typography>
-              {selectedExercise?.altName && (
-                <Typography>{selectedExercise.altName}</Typography>
-              )}
-              {selectedExercise?.secondAltName && (
-                <Typography>{` - ${selectedExercise.secondAltName}`}</Typography>
-              )}
-            </DrawerContentLine>
-          )}
-          {selectedExercise?.description && (
-            <Typography>{selectedExercise.description}</Typography>
-          )}
-        </DrawerContentContainer>
-      </Drawer>
 
+      <ExerciseDrawer
+        isOpen={isContentDrawerOpen}
+        onClose={closeContentDrawer}
+        exercise={selectedExercise}
+      />
       <MainActionButton onClick={() => displayEditionModal(null)} />
     </PageLayout>
   );

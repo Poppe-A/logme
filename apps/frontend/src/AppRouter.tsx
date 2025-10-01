@@ -6,10 +6,10 @@ import { Dashboard } from './features/dashboard/Dashboard';
 import { ExercisePage } from './features/exercise/ExercisePage';
 import { NewSession } from './features/session/NewSession';
 import { SessionList } from './features/session/SessionList';
-import { Session } from './features/session/Session';
 import { MenuLayout } from './components/MenuLayout';
 import { SettingsPage } from './features/settings/SettingsPage';
 import { HealthPage } from './features/health/HealthPage';
+import { OngoingSession } from './features/session/ongoingSession';
 
 export const AppRouter = () => (
   <AuthGate>
@@ -20,7 +20,7 @@ export const AppRouter = () => (
         <Route path="/sports" element={<SportsPage />} />
         <Route path="/sports/:id/exercises" element={<ExercisePage />} />
         <Route path="sessions/new" element={<NewSession />} />
-        <Route path="/sessions/:sessionId" element={<Session />} />
+        <Route path="/sessions/:sessionId" element={<OngoingSession />} />
         <Route path="/sessions" element={<SessionList />} />
         <Route path="/settings" element={<SettingsPage />} />
         <Route path="/health" element={<HealthPage />} />

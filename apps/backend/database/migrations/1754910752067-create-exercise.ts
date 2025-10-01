@@ -52,6 +52,7 @@ export class CreateExercise1754910752067 implements MigrationInterface {
         columnNames: ['sport_id'],
         referencedColumnNames: ['id'],
         referencedTableName: 'sport',
+        onDelete: 'CASCADE',
       }),
     );
   }

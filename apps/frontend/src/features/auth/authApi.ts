@@ -19,7 +19,6 @@ export const authApi = createApi({
       async onQueryStarted(args, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
-          console.log('--- login data', data);
           dispatch(setAccessToken({ accessToken: data.accessToken }));
           dispatch(setAuthenticatedUser({ user: data.user }));
           dispatch(
@@ -71,7 +70,6 @@ export const authApi = createApi({
       void
     >({
       query: () => {
-        console.log('call refresh route');
         return { url: '/auth/refresh', method: 'POST' };
       },
     }),

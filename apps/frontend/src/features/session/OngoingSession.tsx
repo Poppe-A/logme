@@ -11,6 +11,10 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { SliceState } from '../../utils/common';
 import { PageLayout } from '../../components/PageLayout';
+import { SessionExerciseDetail } from './SessionExerciseDetail';
+import { getAllSetsBySessionId } from '../set/setSlice';
+import { ExerciseDrawer } from '../exercise/ExerciseDrawer';
+import type { Exercise } from '../exercise/exerciseApi';
 
 // const ExercisesContainer = styled(Container)`
 //   flex: 1 1 auto;
@@ -30,20 +34,29 @@ import { PageLayout } from '../../components/PageLayout';
 //   displayModal: (exercise: Exercise) => void;
 // }
 
-export const Session: React.FC = () => {
+export const OngoingSession: React.FC = () => {
   const session = useAppSelector(selectSession);
-  const sessionExecises = useAppSelector(selectSessionExercises);
+  const sessionExercises = useAppSelector(selectSessionExercises);
   const sessionSliceState = useAppSelector(selectSessionState);
   const dispatch = useAppDispatch();
   const { sessionId } = useParams();
-  const [isOngoingSession, setIsOngoingSession] = useState(false);
+  const [isContentDrawerOpen, setIsContentDrawerOpen] = useState(false);
+  const [selectedExercise, setSelectedExercise] = useState<Exercise | null>(
+    null,
+  );
+  const [isFinishedSession, setIsFinishedSession] = useState(true);
 
-  const displaySessionExercises = () => {
-    if (sessionExecises.length) {
-      return sessionExecises.map(sessionExercise => (
-        <Typography>{sessionExercise.exercise.name}</Typography>
-      ));
-    }
+  const displayContentDrawer = (exercise: Exercise | null) => {
+    console.log('---azazd');
+    setIsContentDrawerOpen(true);
+    setSelectedExercise(exercise);
+  };
+
+  const closeContentDrawer = () => {
+    setIsContentDrawerOpen(false);
+    setTimeout(() => {
+      setSelectedExercise(null);
+    }, 200);
   };
 
   const displayTitle = () => {
@@ -56,29 +69,50 @@ export const Session: React.FC = () => {
     }
   };
 
+  console.log('---is Finished', isFinishedSession);
   useEffect(() => {
     if (sessionId) {
       dispatch(getSession(+sessionId));
       dispatch(getSessionExercises(+sessionId));
+      dispatch(getAllSetsBySessionId(+sessionId));
     }
   }, [sessionId]);
 
   useEffect(() => {
     if (sessionSliceState === SliceState.FINISHED && !session) {
+      console.log('session error');
       // todo redirect and display message
     }
   }, [sessionSliceState]);
 
   useEffect(() => {
-    setIsOngoingSession(Boolean(session?.endDate));
+    setIsFinishedSession(Boolean(session?.endDate));
   }, [session]);
 
   return (
-    <PageLayout
-      title={displayTitle()}
-      isLoading={sessionSliceState !== SliceState.FINISHED}
-    >
-      {displaySessionExercises()}
-    </PageLayout>
+    <>
+      <PageLayout
+        title={displayTitle()}
+        isLoading={sessionSliceState !== SliceState.FINISHED}
+      >
+        {session &&
+          sessionExercises?.map(sessionExercise => (
+            <SessionExerciseDetail
+              key={sessionExercise.id}
+              sessionExercise={sessionExercise}
+              sessionId={session.id}
+              onDisplayExerciseDetail={() =>
+                displayContentDrawer(sessionExercise.exercise)
+              }
+              disabled={isFinishedSession}
+            />
+          ))}
+      </PageLayout>
+      <ExerciseDrawer
+        isOpen={isContentDrawerOpen}
+        onClose={closeContentDrawer}
+        exercise={selectedExercise}
+      />
+    </>
   );
 };

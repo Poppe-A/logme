@@ -5,6 +5,7 @@ import timezone from 'dayjs/plugin/timezone';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers';
+import 'dayjs/locale/fr';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);

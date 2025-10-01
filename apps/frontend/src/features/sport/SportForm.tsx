@@ -15,6 +15,7 @@ const FormContainer = styled(Box)`
   display: flex;
   flex-direction: column;
   gap: 2rem;
+  margin-top: 1rem;
 `;
 
 export const SportForm: React.FC<ISportForm> = ({

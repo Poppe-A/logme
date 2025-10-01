@@ -2,6 +2,7 @@
 import { configureStore } from '@reduxjs/toolkit';
 import authReducer from '../features/auth/authSlice';
 import sessionReducer from '../features/session/sessionSlice';
+import setReducer from '../features/set/setSlice';
 import { authApi } from '../features/auth/authApi';
 import {
   useDispatch,
@@ -16,6 +17,7 @@ export const store = configureStore({
   reducer: {
     auth: authReducer,
     session: sessionReducer,
+    set: setReducer,
     [authApi.reducerPath]: authApi.reducer,
     [sportApi.reducerPath]: sportApi.reducer,
     [exerciseApi.reducerPath]: exerciseApi.reducer,
