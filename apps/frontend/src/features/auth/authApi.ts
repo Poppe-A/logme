@@ -16,7 +16,7 @@ export const authApi = createApi({
         method: 'POST',
         data: credentials,
       }),
-      async onQueryStarted(args, { dispatch, queryFulfilled }) {
+      async onQueryStarted(_, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
           dispatch(setAccessToken({ accessToken: data.accessToken }));
@@ -41,7 +41,7 @@ export const authApi = createApi({
         method: 'POST',
       }),
       invalidatesTags: ['AuthUser'],
-      async onQueryStarted(args, { dispatch, queryFulfilled }) {
+      async onQueryStarted(_, { dispatch, queryFulfilled }) {
         try {
           await queryFulfilled;
           // dispatch(logout());

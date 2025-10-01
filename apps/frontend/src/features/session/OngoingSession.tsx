@@ -1,4 +1,3 @@
-import { Typography } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '../../utils/store';
 import {
   getSession,

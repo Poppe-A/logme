@@ -4,7 +4,6 @@ import {
   AccordionSummary,
   Box,
   Button,
-  IconButton,
   styled,
   Typography,
 } from '@mui/material';
@@ -26,7 +25,7 @@ import {
 import type { Set, UpsertSetDto } from '../set/types';
 import { SetRow } from './SetRow';
 import { InfoOutline } from '@mui/icons-material';
-import { type MouseEvent } from 'react';
+import { useEffect, type MouseEvent } from 'react';
 
 const SetsContainer = styled(Box)`
   display: flex;
@@ -70,9 +69,8 @@ export const SessionExerciseDetail: React.FC<ISessionExerciseDetail> = ({
   const {
     control,
     handleSubmit,
-    reset,
 
-    formState: { isDirty, isSubmitting },
+    formState: { isDirty },
   } = useForm<FormValue>({
     values: {
       sets: formatDataToFormSet(sets),
@@ -140,6 +138,13 @@ export const SessionExerciseDetail: React.FC<ISessionExerciseDetail> = ({
   const onError: SubmitErrorHandler<FormValue> = data => {
     console.log('error', data);
   };
+
+  useEffect(() => {
+    console.log('--- addNewLine');
+    if (!fields.length) {
+      addEmptySet();
+    }
+  }, [fields.length]);
   // todo modale to display exercises infos
   // memoize selector
   // previous results

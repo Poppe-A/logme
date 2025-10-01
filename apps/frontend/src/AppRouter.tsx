@@ -9,7 +9,7 @@ import { SessionList } from './features/session/SessionList';
 import { MenuLayout } from './components/MenuLayout';
 import { SettingsPage } from './features/settings/SettingsPage';
 import { HealthPage } from './features/health/HealthPage';
-import { OngoingSession } from './features/session/ongoingSession';
+import { OngoingSession } from './features/session/OngoingSession';
 
 export const AppRouter = () => (
   <AuthGate>
