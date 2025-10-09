@@ -5,6 +5,7 @@ import {
   selectSession,
   selectSessionExercises,
   selectSessionState,
+  updateSession,
 } from './sessionSlice';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
@@ -14,7 +15,11 @@ import { SessionExerciseDetail } from './SessionExerciseDetail';
 import { getAllSetsBySessionId } from '../set/setSlice';
 import { ExerciseDrawer } from '../exercise/ExerciseDrawer';
 import type { Exercise } from '../exercise/exerciseApi';
-
+import { MainActionButton } from '../../components/MainActionButton';
+import { DoneAllOutlined, Edit } from '@mui/icons-material';
+import { Box, styled, Typography } from '@mui/material';
+import type { Session } from './types';
+import { formatDuration, intervalToDuration } from 'date-fns';
 // const ExercisesContainer = styled(Container)`
 //   flex: 1 1 auto;
 //   display: flex;
@@ -33,6 +38,14 @@ import type { Exercise } from '../exercise/exerciseApi';
 //   displayModal: (exercise: Exercise) => void;
 // }
 
+const StyledBox = styled(Box)`
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  margin-bottom: 1rem;
+  padding-left: 2rem;
+`;
+
 export const OngoingSession: React.FC = () => {
   const session = useAppSelector(selectSession);
   const sessionExercises = useAppSelector(selectSessionExercises);
@@ -46,7 +59,6 @@ export const OngoingSession: React.FC = () => {
   const [isFinishedSession, setIsFinishedSession] = useState(true);
 
   const displayContentDrawer = (exercise: Exercise | null) => {
-    console.log('---azazd');
     setIsContentDrawerOpen(true);
     setSelectedExercise(exercise);
   };
@@ -58,17 +70,28 @@ export const OngoingSession: React.FC = () => {
     }, 200);
   };
 
-  const displayTitle = () => {
-    if (!session) {
-      return 'Session';
-    } else if (session.endDate) {
-      return `${session.name} : Session ${session.sport.name} du ${session.startDate}`;
-    } else {
-      return `${session.name} : Session ${session.sport.name} en cours`;
+  const endOrEditSession = () => {
+    if (session) {
+      dispatch(
+        updateSession({
+          sessionId: session.id,
+          endDate: session.endDate ? undefined : new Date(),
+        }),
+      );
     }
   };
 
-  console.log('---is Finished', isFinishedSession);
+  const displaySessionDuration = (
+    sessionStartDate: Session['startDate'],
+    sessionEndDate: Session['endDate'],
+  ) => {
+    const duration = intervalToDuration({
+      start: sessionStartDate,
+      end: sessionEndDate,
+    });
+    return <Typography>Durée : {formatDuration(duration)}</Typography>;
+  };
+
   useEffect(() => {
     if (sessionId) {
       dispatch(getSession(+sessionId));
@@ -91,9 +114,15 @@ export const OngoingSession: React.FC = () => {
   return (
     <>
       <PageLayout
-        title={displayTitle()}
+        title={session?.sport.name}
+        subtitle={session?.name}
         isLoading={sessionSliceState !== SliceState.FINISHED}
       >
+        <StyledBox>
+          {session?.endDate
+            ? displaySessionDuration(session.startDate, session.endDate)
+            : null}
+        </StyledBox>
         {session &&
           sessionExercises?.map(sessionExercise => (
             <SessionExerciseDetail
@@ -106,6 +135,16 @@ export const OngoingSession: React.FC = () => {
               disabled={isFinishedSession}
             />
           ))}
+        <MainActionButton
+          onClick={endOrEditSession}
+          icon={
+            session?.endDate ? (
+              <Edit fontSize="large" />
+            ) : (
+              <DoneAllOutlined fontSize="large" />
+            )
+          }
+        />
       </PageLayout>
       <ExerciseDrawer
         isOpen={isContentDrawerOpen}

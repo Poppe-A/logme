@@ -20,11 +20,11 @@ export class Session {
   @Column({ type: 'varchar' })
   name: string;
 
-  @Column({ name: 'start_date', type: 'date' })
+  @Column({ name: 'start_date', type: 'datetime' })
   startDate: Date;
 
-  @Column({ name: 'end_date', type: 'date', nullable: true })
-  endDate?: Date;
+  @Column({ name: 'end_date', type: 'datetime', nullable: true })
+  endDate?: Date | null;
 
   @ManyToOne(() => User, (user) => user)
   @JoinColumn({ name: 'user_id' })

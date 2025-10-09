@@ -1,22 +1,78 @@
-import { Injectable } from '@nestjs/common';
+import {
+  forwardRef,
+  Inject,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { SessionExercise } from './sessionExercise.entity';
 import { Session } from '../session/session.entity';
-import { CreateSessionExerciseDto } from './sessionExercise.type';
+import {
+  CreateSessionExerciseDto,
+  EarlierSessionForInformation,
+} from './sessionExercise.type';
+import { SessionService } from '../session/session.service';
+import { User } from '../user/user.entity';
 
 @Injectable()
 export class SessionExerciseService {
   constructor(
     @InjectRepository(SessionExercise)
     private sessionExerciseRepository: Repository<SessionExercise>,
+    @Inject(forwardRef(() => SessionService))
+    private sessionService: SessionService,
   ) {}
 
-  findAllBySessionId(sessionId: Session['id']): Promise<SessionExercise[]> {
-    return this.sessionExerciseRepository.find({
+  async findAllBySessionId(
+    sessionId: Session['id'],
+    userId: User['id'],
+  ): Promise<SessionExercise[]> {
+    const session = await this.sessionService.findById(sessionId);
+    if (session.user.id !== userId) {
+      throw new UnauthorizedException();
+    }
+
+    const sessionExercises = await this.sessionExerciseRepository.find({
       where: { session: { id: sessionId } },
-      relations: { exercise: true },
+      relations: { session: true, exercise: true },
+      select: {
+        session: { id: true, name: true, startDate: true },
+      },
     });
+
+    const sessionsFormattedWithEarlierSessionsData = sessionExercises.map(
+      (sessionExercise) =>
+        this.getFormattedEarlierSessionExercise(sessionExercise, userId),
+    );
+
+    return Promise.all(sessionsFormattedWithEarlierSessionsData);
+  }
+
+  async getFormattedEarlierSessionExercise(
+    sessionExercise: SessionExercise,
+    userId: User['id'],
+  ) {
+    let formattedEarlierSession: EarlierSessionForInformation | null = null;
+
+    const earlierSessionWithSets =
+      await this.sessionService.findLastByUserAndSessionExerciseId(
+        userId,
+        sessionExercise.exercise.id,
+      );
+
+    if (earlierSessionWithSets) {
+      formattedEarlierSession = {
+        name: earlierSessionWithSets.name,
+        startDate: earlierSessionWithSets.startDate,
+        sets: earlierSessionWithSets.sessionExercises[0].sets,
+      };
+    }
+
+    return {
+      ...sessionExercise,
+      earlierSessionWithSets: formattedEarlierSession,
+    };
   }
 
   async create(createSessionExerciseDto: CreateSessionExerciseDto[]) {

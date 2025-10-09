@@ -47,7 +47,6 @@ export class SessionController {
   edit(
     @Body() editSessionDto: EditSessionDto,
     @Req() req: RequestWithMetadatas,
-    @Param('sportId') sportId: string,
     @Param('sessionId') sessionId: string,
   ): Promise<Session | null> {
     return this.sessionService.edit(+sessionId, editSessionDto);

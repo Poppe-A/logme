@@ -1,5 +1,6 @@
 import { Add } from '@mui/icons-material';
 import { IconButton, styled, Typography } from '@mui/material';
+import type { ReactNode } from 'react';
 
 const StyledButton = styled(IconButton)`
   width: 4rem;
@@ -19,15 +20,23 @@ const StyledButton = styled(IconButton)`
 interface IMainActionButton {
   onClick: () => void;
   label?: string;
+  icon?: ReactNode;
 }
 
 export const MainActionButton: React.FC<IMainActionButton> = ({
   onClick,
   label,
+  icon,
 }) => {
   return (
     <StyledButton onClick={onClick} sx={{ boxShadow: 2 }}>
-      {label ? <Typography>{label}</Typography> : <Add fontSize="large" />}
+      {label ? (
+        <Typography>{label}</Typography>
+      ) : icon ? (
+        icon
+      ) : (
+        <Add fontSize="large" />
+      )}
     </StyledButton>
   );
 };

@@ -12,6 +12,13 @@ export interface CreateSessionDto {
   exercises?: Exercise['id'][];
 }
 
+export interface UpdateSessionDto {
+  sessionId: Session['id'];
+  description?: 'string';
+  endDate?: Date;
+  exercises?: Exercise['id'][];
+}
+
 export interface Session {
   id: number;
   name: string;

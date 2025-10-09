@@ -31,7 +31,7 @@ export class CreateSession1754929826056 implements MigrationInterface {
             isNullable: true,
           },
           { name: 'start_date', type: 'timestamp', default: 'NOW()' },
-          { name: 'end_date', type: 'date', isNullable: true },
+          { name: 'end_date', type: 'timestamp', isNullable: true },
         ],
       }),
     );

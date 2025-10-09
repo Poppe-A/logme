@@ -53,7 +53,6 @@ export const SessionExerciseDetail: React.FC<ISessionExerciseDetail> = ({
   onDisplayExerciseDetail,
   disabled,
 }) => {
-  // console.log('--- exercise tile');
   const dispatch = useAppDispatch();
   const sets = useAppSelector(store =>
     selectSetsBySessionExerciseId(store, sessionExercise.id),
@@ -122,7 +121,6 @@ export const SessionExerciseDetail: React.FC<ISessionExerciseDetail> = ({
         (field.repetitions !== storeSet.repetitions ||
           field.weight !== storeSet.weight)
       ) {
-        console.log('udpatefield', field);
         updateFieldsPromises.push(dispatch(updateSet(setToUpsert)));
       } else if (!field.id) {
         updateFieldsPromises.push(dispatch(createSet(setToUpsert)));
@@ -139,12 +137,13 @@ export const SessionExerciseDetail: React.FC<ISessionExerciseDetail> = ({
     console.log('error', data);
   };
 
-  useEffect(() => {
-    console.log('--- addNewLine');
-    if (!fields.length) {
-      addEmptySet();
-    }
-  }, [fields.length]);
+  // useEffect(() => {
+  //   console.log('--- addNewLine');
+  //   if (!fields.length) {
+  //     addEmptySet();
+  //   }
+  // }, [fields.length]);
+
   // todo modale to display exercises infos
   // memoize selector
   // previous results
@@ -171,7 +170,7 @@ export const SessionExerciseDetail: React.FC<ISessionExerciseDetail> = ({
                 index={index}
                 onDelete={() => onDeleteSet(index, field?.id)}
                 disabled={disabled}
-                key={field?.id || 'newLine'}
+                key={field?.id ?? 'newLine'}
               />
             ))
           ) : (

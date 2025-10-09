@@ -1,11 +1,12 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Session } from './session.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { IsNull, Repository } from 'typeorm';
+import { IsNull, Not, Repository } from 'typeorm';
 import { User } from '../user/user.entity';
 import { Sport } from '../sport/sport.entity';
 import { CreateSessionDto, EditSessionDto } from './session.type';
 import { SessionExerciseService } from '../sessionExercise/sessionExercise.service';
+import { SessionExercise } from '../sessionExercise/sessionExercise.entity';
 
 @Injectable()
 export class SessionService {
@@ -18,8 +19,8 @@ export class SessionService {
   async findById(id: Session['id']): Promise<Session> {
     const session = await this.sessionRepository.findOne({
       where: { id },
-      relations: { sport: true },
-      select: { sport: { name: true } },
+      relations: { sport: true, user: true },
+      select: { sport: { name: true }, user: { id: true } },
     });
 
     if (!session) {
@@ -37,6 +38,24 @@ export class SessionService {
       select: {
         sport: { name: true },
         sessionExercises: { id: true, exercise: { name: true } },
+      },
+    });
+  }
+
+  findLastByUserAndSessionExerciseId(
+    userId: User['id'],
+    sessionExerciseExerciseId: SessionExercise['exercise']['id'],
+  ) {
+    console.log('--- sessionExercise');
+    return this.sessionRepository.findOne({
+      where: {
+        user: { id: userId },
+        sessionExercises: { exercise: { id: sessionExerciseExerciseId } },
+        endDate: Not(IsNull()),
+      },
+      relations: { sessionExercises: { exercise: true, sets: true } },
+      order: {
+        startDate: 'DESC',
       },
     });
   }
@@ -84,7 +103,12 @@ export class SessionService {
     sessionId: Session['id'],
     editSessionDto: EditSessionDto,
   ): Promise<Session | null> {
-    await this.sessionRepository.update(sessionId, editSessionDto);
+    const endDate = editSessionDto.endDate ? new Date() : null;
+    console.log('ededed', endDate);
+    await this.sessionRepository.update(sessionId, {
+      ...editSessionDto,
+      endDate,
+    });
     return this.findById(sessionId);
   }
 }

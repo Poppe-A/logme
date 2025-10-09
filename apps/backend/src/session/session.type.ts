@@ -8,12 +8,12 @@ export interface CreateSessionDto {
   userId: User['id'];
   name: Session['name'];
   description?: Session['description'];
-  date: Date;
   exercises?: Exercise['id'][];
 }
 
 export interface EditSessionDto {
-  name: Session['name'];
-  description: Session['description'];
-  date: Date;
+  name?: Session['name'];
+  description?: Session['description'];
+  endDate?: Date;
+  exercises?: Exercise['id'][];
 }

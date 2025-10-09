@@ -12,6 +12,7 @@ import { useNavigate } from 'react-router';
 
 interface IPageLayout {
   title?: string;
+  subtitle?: string;
   button?: ReactElement;
   isLoading?: boolean;
   displayBackArrow?: boolean;
@@ -35,6 +36,7 @@ const StyledHeader = styled(Container)`
   padding-top: 2rem;
   padding-left: 2rem;
   margin-bottom: 2rem;
+  gap: 0.5rem;
 `;
 
 const StyledIconButton = styled(IconButton)`
@@ -43,6 +45,7 @@ const StyledIconButton = styled(IconButton)`
 
 export const PageLayout: React.FC<PropsWithChildren<IPageLayout>> = ({
   title,
+  subtitle,
   isLoading,
   button,
   children,
@@ -63,7 +66,8 @@ export const PageLayout: React.FC<PropsWithChildren<IPageLayout>> = ({
             <ArrowBack />
           </StyledIconButton>
         )}
-        {title && <Typography variant="h2">{title}</Typography>}
+        {title && <Typography variant="h3">{title}</Typography>}
+        {subtitle && <Typography variant="h3">{subtitle}</Typography>}
         {button}
       </StyledHeader>
       <Box sx={{ flex: 1, width: '100%', overflowY: 'auto' }}>
