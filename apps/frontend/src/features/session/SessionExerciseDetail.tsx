@@ -24,19 +24,25 @@ import {
 } from 'react-hook-form';
 import type { Set, UpsertSetDto } from '../set/types';
 import { SetRow } from './SetRow';
-import { InfoOutline } from '@mui/icons-material';
-import { useEffect, type MouseEvent } from 'react';
+import { Close, InfoOutline } from '@mui/icons-material';
+import { useState, type MouseEvent } from 'react';
+import { PreviousSessionResults } from './PreviousSessionResults';
 
 const SetsContainer = styled(Box)`
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  margin-top: 2rem;
 `;
 
 const AccordionSummaryContent = styled(Box)`
   display: flex;
   gap: 1rem;
   align-items: center;
+  align-self: flex-start;
+`;
+
+const StyleButton = styled(Button)`
   align-self: flex-start;
 `;
 
@@ -53,6 +59,7 @@ export const SessionExerciseDetail: React.FC<ISessionExerciseDetail> = ({
   onDisplayExerciseDetail,
   disabled,
 }) => {
+  const [displayPreviousSession, setDisplayPreviousSession] = useState(false);
   const dispatch = useAppDispatch();
   const sets = useAppSelector(store =>
     selectSetsBySessionExerciseId(store, sessionExercise.id),
@@ -137,6 +144,10 @@ export const SessionExerciseDetail: React.FC<ISessionExerciseDetail> = ({
     console.log('error', data);
   };
 
+  const togglePreviousSession = () => {
+    setDisplayPreviousSession(!displayPreviousSession);
+  };
+
   // useEffect(() => {
   //   console.log('--- addNewLine');
   //   if (!fields.length) {
@@ -144,9 +155,7 @@ export const SessionExerciseDetail: React.FC<ISessionExerciseDetail> = ({
   //   }
   // }, [fields.length]);
 
-  // todo modale to display exercises infos
   // memoize selector
-  // previous results
   return (
     <Accordion>
       <AccordionSummary
@@ -162,6 +171,21 @@ export const SessionExerciseDetail: React.FC<ISessionExerciseDetail> = ({
         </AccordionSummaryContent>
       </AccordionSummary>
       <AccordionDetails>
+        {sessionExercise.earlierSessionWithSets ? (
+          <StyleButton
+            variant="outlined"
+            size="small"
+            onClick={togglePreviousSession}
+          >
+            {!displayPreviousSession ? 'Résultats précédents' : <Close />}
+          </StyleButton>
+        ) : null}
+        {displayPreviousSession && sessionExercise.earlierSessionWithSets ? (
+          <PreviousSessionResults
+            earlierSessionResults={sessionExercise.earlierSessionWithSets}
+          />
+        ) : null}
+
         <SetsContainer>
           {fields.length ? (
             fields.map((field, index) => (
@@ -180,13 +204,18 @@ export const SessionExerciseDetail: React.FC<ISessionExerciseDetail> = ({
 
         {!disabled && (
           <>
-            <Button onClick={addEmptySet}>Ajouter une série</Button>
-            <Button
-              onClick={handleSubmit(onSubmit, onError)}
-              disabled={!isDirty}
-            >
-              Submit
-            </Button>
+            {isDirty ? (
+              <Button
+                onClick={handleSubmit(onSubmit, onError)}
+                disabled={!isDirty}
+              >
+                Submit
+              </Button>
+            ) : (
+              <Button onClick={addEmptySet} disabled={isDirty}>
+                Ajouter une série
+              </Button>
+            )}
           </>
         )}
       </AccordionDetails>

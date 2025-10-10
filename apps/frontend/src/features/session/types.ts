@@ -31,6 +31,7 @@ export interface Session {
 export interface SessionExercise {
   id: number;
   exercise: Exercise;
+  earlierSessionWithSets?: EarlierSessionForInformation;
 }
 
 export interface INewSessionFormData {
@@ -56,4 +57,10 @@ export interface ISetRow<TFieldValues extends FieldValues> {
   isNew?: boolean;
   onDelete?: () => void;
   disabled?: boolean;
+}
+
+export interface EarlierSessionForInformation {
+  name: Session['name'];
+  startDate: Session['startDate'];
+  sets: Set[];
 }
