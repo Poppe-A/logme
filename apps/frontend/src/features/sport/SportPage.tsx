@@ -14,6 +14,7 @@ import { capitalizeFirstLetter } from '../../utils/format';
 import { CardWithLongPress } from '../../components/CardWithLongPress';
 import { ChevronRight } from '@mui/icons-material';
 import { MainActionButton } from '../../components/MainActionButton';
+import { useTranslation } from 'react-i18next';
 
 const SportItem = styled(CardWithLongPress)`
   display: flex;
@@ -37,6 +38,7 @@ const StyledBox = styled(Box)`
 `;
 
 export function SportsPage() {
+  const { t } = useTranslation();
   const { data: sports, isLoading } = useGetSportsQuery();
   const [updateSport] = useUpdateSportMutation();
   const [createSport] = useCreateSportMutation();
@@ -79,9 +81,8 @@ export function SportsPage() {
       return null;
     }
   };
-  // todo adaptativeGrid
   return (
-    <PageLayout title="Sports" isLoading={isLoading}>
+    <PageLayout title={t('sports.title')} isLoading={isLoading}>
       <StyledBox>{displaySports()}</StyledBox>
       <SportForm
         isOpen={isModalOpen}

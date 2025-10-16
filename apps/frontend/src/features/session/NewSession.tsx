@@ -21,6 +21,7 @@ import { MainActionButton } from '../../components/MainActionButton';
 import { useAppDispatch } from '../../utils/store';
 import { createSessionWithExercises } from './sessionSlice';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 const FormContainer = styled(Box)`
   width: 100%;
@@ -38,6 +39,7 @@ const SelectedExercisesContainer = styled(Box)`
 `;
 
 export const NewSession: React.FC = () => {
+  const { t } = useTranslation();
   const { data: sports, isLoading: isSportsLoading } = useGetSportsQuery();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -48,7 +50,6 @@ export const NewSession: React.FC = () => {
     sportId: undefined,
     exercises: [],
   };
-  // todo use a form with validation
   const { handleSubmit, control, watch } = useForm<INewSessionFormData>({
     defaultValues: initialValues,
   });
@@ -107,19 +108,19 @@ export const NewSession: React.FC = () => {
   };
 
   return (
-    <PageLayout title="New session">
+    <PageLayout title={t('sessions.new')}>
       <FormContainer>
-        <Typography>Nom de la session :</Typography>
+        <Typography>{t('sessions.sessionName')} :</Typography>
         <FormTextField
           control={control}
           name="name"
-          label="Name"
+          label={t('sessions.sessionName')}
           fieldType={FIELD_TYPE.TEXT}
           required
           fullWidth={true}
         />
 
-        <Typography>Date de la séance :</Typography>
+        <Typography>{t('sessions.sessionDate')} :</Typography>
         <Controller
           control={control}
           name="startDate"
@@ -127,36 +128,37 @@ export const NewSession: React.FC = () => {
             <GenericDatePicker value={value} onChange={onChange} />
           )}
         />
-        <Typography>Choisissez votre sport :</Typography>
+        <Typography>{t('sessions.sessionSport')} :</Typography>
         {isSportsLoading || !sports?.length ? (
           <CircularProgress />
         ) : (
           <FormSelect
             control={control}
             name="sportId"
-            label="Sport"
+            label={t('sessions.sportLabel')}
             items={buildSportItems()}
+            required
           />
         )}
 
         {displayExercises && (
           <>
-            <Typography>Choisissez vos exercices :</Typography>
+            <Typography>{t('sessions.sessionExercise')} :</Typography>
             <Typography variant="caption">
-              Vous aurez la possibilité de modifier cet liste par la suite
+              {t('sessions.exercisesComment')}
             </Typography>
 
             <FormSelect
               control={control}
               name="exercises"
-              label="Exercises"
+              label={t('sessions.exercisesLabel')}
               items={buildExerciseItems()}
               renderValue={() => getSelectedExerciseNames().join(', ')}
               multiple
             />
 
             {selectedExercises.length ? (
-              <Typography>Exercices sélectionnés :</Typography>
+              <Typography>{t('sessions.selectedExercises')} :</Typography>
             ) : null}
             <SelectedExercisesContainer>
               {getSelectedExerciseNames().map(ex => (
@@ -167,13 +169,14 @@ export const NewSession: React.FC = () => {
         )}
 
         {sportId && !isExercisesLoading && exercises?.length === 0 && (
-          <Typography>Pas d'exercices pour ce sport</Typography>
+          <Typography>{t('exercises.noExercise')}</Typography>
         )}
       </FormContainer>
 
       <MainActionButton
         onClick={handleSubmit(onSubmit, handleErrors)}
         label="GO !"
+        // disabled={!sportId}
       />
     </PageLayout>
   );

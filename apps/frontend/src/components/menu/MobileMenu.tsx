@@ -1,4 +1,4 @@
-import { Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
 import {
   BottomNavigation,
   BottomNavigationAction,
@@ -8,15 +8,11 @@ import {
   Paper,
   styled,
 } from '@mui/material';
-import DashboardIcon from '@mui/icons-material/Dashboard';
-import ListAltIcon from '@mui/icons-material/ListAlt';
-import { useMemo, useState, type SyntheticEvent } from 'react';
-import {
-  AccountCircle,
-  FitnessCenter,
-  MonitorHeart,
-} from '@mui/icons-material';
-import { useLogoutMutation } from '../features/auth/authApi';
+
+import { useState, type SyntheticEvent } from 'react';
+
+import { useLogoutMutation } from '../../features/auth/authApi';
+import { useTranslation } from 'react-i18next';
 
 const PaddedBox = styled(Box)`
   flex: 1 1 auto;
@@ -25,10 +21,17 @@ const PaddedBox = styled(Box)`
   padding-bottom: 3rem; /* hauteur BottomNav */
 `;
 
-export const MenuLayout = () => {
-  const [logout] = useLogoutMutation();
+interface IMobileMenuProps {
+  navItems: { label: string; path: string; icon: React.ReactNode }[];
+  activePath: string;
+}
 
-  const location = useLocation();
+export const MobileMenu: React.FC<IMobileMenuProps> = ({
+  navItems,
+  activePath,
+}) => {
+  const [logout] = useLogoutMutation();
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -45,14 +48,6 @@ export const MenuLayout = () => {
     handleClose();
   };
 
-  const navItems = [
-    { label: 'Sports', path: '/sports', icon: <FitnessCenter /> },
-    { label: 'Sessions', path: '/sessions', icon: <ListAltIcon /> },
-    { label: 'Dashboard', path: '/', icon: <DashboardIcon /> },
-    { label: 'Health', path: '/health', icon: <MonitorHeart /> },
-    { label: 'Account', path: '/account', icon: <AccountCircle /> },
-  ];
-
   const onChange = (value: string, event: SyntheticEvent) => {
     if (value === '/account') {
       openMenu(event);
@@ -61,16 +56,7 @@ export const MenuLayout = () => {
     }
   };
 
-  const activePath = useMemo(() => {
-    const pathBase = location.pathname.split('/')[1];
-
-    return (
-      navItems.find(item => item.path.split('/')[1] === pathBase)?.path ||
-      '/account'
-    );
-  }, [location.pathname]);
-
-  // todo move in separate components
+  // add desktop menu
   return (
     <>
       <PaddedBox>
@@ -111,8 +97,8 @@ export const MenuLayout = () => {
             },
           }}
         >
-          <MenuItem onClick={goToSettings}>Settings</MenuItem>
-          <MenuItem onClick={() => logout()}>Logout</MenuItem>
+          <MenuItem onClick={goToSettings}>{t('account.settings')}</MenuItem>
+          <MenuItem onClick={() => logout()}>{t('account.logout')}</MenuItem>
         </Menu>
       </Paper>
     </>

@@ -9,6 +9,7 @@ import {
 } from '@mui/material';
 import { type MouseEventHandler, type PropsWithChildren } from 'react';
 import { useIsMobile } from '../hooks/useIsMobile';
+import { useTranslation } from 'react-i18next';
 
 type StyledMobileProps = {
   isMobile?: boolean;
@@ -68,6 +69,7 @@ export const GenericModal: React.FC<PropsWithChildren<IGenericModalProps>> = ({
   handleConfirm,
   handleClose,
 }) => {
+  const { t } = useTranslation();
   const isMobile = useIsMobile();
 
   return (
@@ -76,9 +78,9 @@ export const GenericModal: React.FC<PropsWithChildren<IGenericModalProps>> = ({
         <CardHeader title={title} />
         <CardBody>{children}</CardBody>
         <ButtonsContainer>
-          <Button onClick={handleClose}>Annuler</Button>
+          <Button onClick={handleClose}>{t('common.cancel')}</Button>
           <Button onClick={handleConfirm} variant="contained">
-            Confirmer
+            {t('common.confirm')}
           </Button>
         </ButtonsContainer>
       </ModalCard>

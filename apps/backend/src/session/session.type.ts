@@ -7,6 +7,7 @@ export interface CreateSessionDto {
   sportId: Sport['id'];
   userId: User['id'];
   name: Session['name'];
+  startDate: Session['startDate'];
   description?: Session['description'];
   exercises?: Exercise['id'][];
 }

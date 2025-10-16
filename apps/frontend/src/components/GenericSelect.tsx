@@ -32,6 +32,7 @@ export const GenericSelect: React.FC<IGenericSelect> = ({
   multiple = false,
   renderValue,
 }) => {
+  console.log('error', error, required);
   return (
     <FormControl required={required}>
       <InputLabel>{label}</InputLabel>

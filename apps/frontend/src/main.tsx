@@ -7,6 +7,8 @@ import { store } from './utils/store.ts';
 import { CssBaseline, ThemeProvider } from '@mui/material';
 import theme from './theme.ts';
 
+import './i18n';
+
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <ThemeProvider theme={theme} defaultMode="light">

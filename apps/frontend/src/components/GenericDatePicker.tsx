@@ -6,6 +6,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers';
 import 'dayjs/locale/fr';
+import { useTranslation } from 'react-i18next';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -19,13 +20,14 @@ export const GenericDatePicker: React.FC<IDatePicker> = ({
   value,
   onChange,
 }) => {
+  const { t } = useTranslation();
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={'fr'}>
       <DatePicker
         value={value}
         onChange={onChange}
         timezone="Europe/Paris"
-        label={'Date'}
+        label={t('common.date')}
         format="DD/MM/YYYY"
       />
     </LocalizationProvider>

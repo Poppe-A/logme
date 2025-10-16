@@ -47,7 +47,7 @@ export class SessionService {
     sessionExerciseExerciseId: SessionExercise['exercise']['id'],
   ) {
     console.log('--- sessionExercise');
-    return this.sessionRepository.findOne({
+    return this.sessionRepository.find({
       where: {
         user: { id: userId },
         sessionExercises: { exercise: { id: sessionExerciseExerciseId } },
@@ -57,6 +57,7 @@ export class SessionService {
       order: {
         startDate: 'DESC',
       },
+      take: 2,
     });
   }
 
@@ -75,13 +76,14 @@ export class SessionService {
   }
 
   async create(createSessionDto: CreateSessionDto): Promise<Session['id']> {
-    const { userId, sportId, name } = createSessionDto;
+    const { userId, sportId, name, startDate } = createSessionDto;
 
     const sessionToCreate = {
       sport: { id: sportId },
       user: { id: userId },
       name,
       description: '',
+      startDate,
     };
 
     const session = await this.sessionRepository.save(sessionToCreate);

@@ -15,8 +15,10 @@ import { capitalizeFirstLetter } from '../../utils/format';
 import { ExerciseList } from './ExerciseList';
 import { MainActionButton } from '../../components/MainActionButton';
 import { ExerciseDrawer } from './ExerciseDrawer';
+import { useTranslation } from 'react-i18next';
 
 export const ExercisePage: React.FC = () => {
+  const { t } = useTranslation();
   const params = useParams();
   const navigate = useNavigate();
   const sportId = Number(params.id);
@@ -33,7 +35,7 @@ export const ExercisePage: React.FC = () => {
   const { data: sports } = useGetSportsQuery();
   const selectedSport = sports?.find(s => s.id === sportId);
   const pageTitle = selectedSport
-    ? `${capitalizeFirstLetter(selectedSport.name)} - Exercises`
+    ? `${capitalizeFirstLetter(selectedSport.name)} - ${t('exercises.title')}`
     : '';
 
   const displayEditionModal = (exercise: Exercise | null) => {
@@ -82,7 +84,7 @@ export const ExercisePage: React.FC = () => {
           displayContentDrawer={displayContentDrawer}
         />
       ) : (
-        <Typography>Ce sport n'a pas encore d'exercices</Typography>
+        <Typography>{t('exercises.noExercise')}</Typography>
       )}
 
       <ExerciseForm

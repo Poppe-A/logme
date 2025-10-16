@@ -1,0 +1,85 @@
+{
+  "common": {
+    "confirm": "Confirmer",
+    "cancel": "Annuler",
+    "date": "Date"
+  },
+  "errors": {
+    "expiredSession": "Session expirée. Veuillez vous reconnecter.",
+    "exerciseUpdate": "Erreur lors de la mise à jour de l'exercice",
+    "exerciseCreate": "Erreur lors de la création de l'exercice",
+    "sportUpdate": "Erreur lors de la mise à jour du sport",
+    "sportCreate": "Erreur lors de la création du sport"
+  },
+  "auth": {
+    "login": "Login",
+    "email": "Email",
+    "password": "Mot de passe",
+    "loginError": "Erreur lors du login"
+  },
+  "menu": {
+    "sports": "Sports",
+    "sessions": "Séances",
+    "dashboard": "Accueil",
+    "health": "Santé",
+    "account": "Mon Compte"
+  },
+  "dashboard": {
+    "welcome": "Bienvenue"
+  },
+  "sports": {
+    "title": "Sports",
+    "add": "Ajouter un sport",
+    "update": "Editer un sport",
+    "name": "Nom",
+    "description": "Description"
+  },
+  "exercises": {
+    "title": "Exercices",
+    "noExercise": "Il n'y a pas encore d'exercices pour ce sport.",
+    "add": "Ajouter un exercice",
+    "update": "Editer un exercice",
+    "name": "",
+    "type": "",
+    "altName": "",
+    "secondAltName": "",
+    "description": "",
+    "altNames": "Autres noms",
+    "typeRequired": "Le type est requis"
+  },
+  "sessions": {
+    "title": "Mes séances",
+    "ongoing": "En cours",
+    "new": "Nouvelle séance",
+    "sessionName": "Nom de la séance",
+    "defaultName": "Nouvelle séance",
+    "sessionDate": "Date de la séance",
+    "sessionSport": "Choisissez un sport",
+    "sportLabel": "Sport",
+    "sessionExercise": "Choisissez vos exercices :",
+    "exercisesComment": "Vous aurez la possibilité de modifier cet liste par la suite",
+    "exercisesLabel": "Exercices",
+    "selectedExercises": "Exercices sélectionnés",
+    "start": "Go !",
+    "noSession": "Vous n'avez aucune session pour le moment",
+    "previousSessions": "Résultats précédents",
+    "noSeries": "Vous n'avez aucune série pour le moment.",
+    "sets": {
+      "set": "Série",
+      "repetitions": "Répétitions",
+      "weightLabel": "Poids (kg)",
+      "weightMin": "Min 0",
+      "weightMax": "Max 9999",
+      "repetitionsMin": "Min 0",
+      "repetitionsMax": "Max 999"
+    }
+  },
+  "health": {
+    "title": "Santé"
+  },
+  "account": {
+    "settings": "Paramètres",
+    "darkMode": "Dark mode",
+    "logout": "Se déconnecter"
+  }
+}

@@ -24,15 +24,18 @@ import {
 } from 'react-hook-form';
 import type { Set, UpsertSetDto } from '../set/types';
 import { SetRow } from './SetRow';
-import { Close, InfoOutline } from '@mui/icons-material';
+import { Add, Close, InfoOutline, Save } from '@mui/icons-material';
 import { useState, type MouseEvent } from 'react';
 import { PreviousSessionResults } from './PreviousSessionResults';
+import { OutlinedIconButton } from '../../components/OutlinedIconButton';
+import { useTranslation } from 'react-i18next';
 
 const SetsContainer = styled(Box)`
   display: flex;
   flex-direction: column;
   gap: 1rem;
   margin-top: 2rem;
+  width: 100%;
 `;
 
 const AccordionSummaryContent = styled(Box)`
@@ -42,8 +45,21 @@ const AccordionSummaryContent = styled(Box)`
   align-self: flex-start;
 `;
 
+const AccordionDetailsContent = styled(Box)`
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  gap: 0.5rem;
+`;
+
 const StyleButton = styled(Button)`
   align-self: flex-start;
+`;
+
+const OutlinedButtonContainer = styled(Box)`
+  align-self: flex-start;
+  /* margin-right: 4rem; */
+  margin-top: 0.5rem;
 `;
 
 interface ISessionExerciseDetail {
@@ -59,6 +75,7 @@ export const SessionExerciseDetail: React.FC<ISessionExerciseDetail> = ({
   onDisplayExerciseDetail,
   disabled,
 }) => {
+  const { t } = useTranslation();
   const [displayPreviousSession, setDisplayPreviousSession] = useState(false);
   const dispatch = useAppDispatch();
   const sets = useAppSelector(store =>
@@ -171,53 +188,62 @@ export const SessionExerciseDetail: React.FC<ISessionExerciseDetail> = ({
         </AccordionSummaryContent>
       </AccordionSummary>
       <AccordionDetails>
-        {sessionExercise.earlierSessionWithSets ? (
-          <StyleButton
-            variant="outlined"
-            size="small"
-            onClick={togglePreviousSession}
-          >
-            {!displayPreviousSession ? 'Résultats précédents' : <Close />}
-          </StyleButton>
-        ) : null}
-        {displayPreviousSession && sessionExercise.earlierSessionWithSets ? (
-          <PreviousSessionResults
-            earlierSessionResults={sessionExercise.earlierSessionWithSets}
-          />
-        ) : null}
+        <AccordionDetailsContent>
+          {sessionExercise.earlierSessionsWithSets ? (
+            <StyleButton
+              variant="outlined"
+              size="small"
+              onClick={togglePreviousSession}
+            >
+              {!displayPreviousSession ? (
+                t('sessions.previousSessions')
+              ) : (
+                <Close />
+              )}
+            </StyleButton>
+          ) : null}
+          {displayPreviousSession &&
+          sessionExercise.earlierSessionsWithSets?.length
+            ? sessionExercise.earlierSessionsWithSets.map(earlierSession => (
+                <PreviousSessionResults
+                  earlierSessionResults={earlierSession}
+                />
+              ))
+            : null}
 
-        <SetsContainer>
-          {fields.length ? (
-            fields.map((field, index) => (
-              <SetRow
-                control={control}
-                index={index}
-                onDelete={() => onDeleteSet(index, field?.id)}
-                disabled={disabled}
-                key={field?.id ?? 'newLine'}
-              />
-            ))
-          ) : (
-            <Typography>Vous n'avez aucune série pour le moment.</Typography>
-          )}
-        </SetsContainer>
-
-        {!disabled && (
-          <>
-            {isDirty ? (
-              <Button
-                onClick={handleSubmit(onSubmit, onError)}
-                disabled={!isDirty}
-              >
-                Submit
-              </Button>
+          <SetsContainer>
+            {fields.length ? (
+              fields.map((field, index) => (
+                <SetRow
+                  control={control}
+                  index={index}
+                  onDelete={() => onDeleteSet(index, field?.id)}
+                  disabled={disabled}
+                  key={field?.id ?? 'newLine'}
+                />
+              ))
             ) : (
-              <Button onClick={addEmptySet} disabled={isDirty}>
-                Ajouter une série
-              </Button>
+              <Typography>{t('sessions.noSeries')}</Typography>
             )}
-          </>
-        )}
+          </SetsContainer>
+
+          {!disabled && (
+            <OutlinedButtonContainer>
+              {isDirty ? (
+                <OutlinedIconButton
+                  onClick={handleSubmit(onSubmit, onError)}
+                  disabled={!isDirty}
+                >
+                  <Save color="primary" />
+                </OutlinedIconButton>
+              ) : (
+                <OutlinedIconButton onClick={addEmptySet} disabled={isDirty}>
+                  <Add color="primary" />
+                </OutlinedIconButton>
+              )}
+            </OutlinedButtonContainer>
+          )}
+        </AccordionDetailsContent>
       </AccordionDetails>
     </Accordion>
   );

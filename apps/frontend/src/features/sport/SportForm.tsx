@@ -10,6 +10,7 @@ import type { ISportForm } from './types';
 import { FormTextField } from '../../components/form/FormTextField';
 import { FIELD_TYPE } from '../../components/form/types';
 import type { Sport } from './sportApi';
+import { useTranslation } from 'react-i18next';
 
 const FormContainer = styled(Box)`
   display: flex;
@@ -24,6 +25,7 @@ export const SportForm: React.FC<ISportForm> = ({
   onSubmit,
   closeModal,
 }) => {
+  const { t } = useTranslation();
   const {
     handleSubmit,
     control,
@@ -53,20 +55,20 @@ export const SportForm: React.FC<ISportForm> = ({
       open={isOpen}
       handleConfirm={handleSubmit(submitForm, handleError)}
       handleClose={closeModal}
-      title={sport ? 'Update sport' : 'New sport'}
+      title={sport ? t('sports.update') : t('sports.add')}
     >
       <FormContainer>
         <FormTextField
           control={control}
           name="name"
-          label="Name"
+          label={t('sports.name')}
           fieldType={FIELD_TYPE.TEXT}
           required
         />
         <FormTextField
           control={control}
           name="description"
-          label="Description"
+          label={t('sports.description')}
           fieldType={FIELD_TYPE.TEXT}
           // required
         />

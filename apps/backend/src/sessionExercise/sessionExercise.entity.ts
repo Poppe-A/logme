@@ -32,5 +32,5 @@ export class SessionExercise {
   @OneToMany(() => Set, (set) => set.sessionExercise)
   sets: Set[];
 
-  earlierSessionForInformation?: EarlierSessionForInformation;
+  earlierSessionsWithSets?: EarlierSessionForInformation[] | null;
 }

@@ -10,6 +10,7 @@ import { PageLayout } from '../../components/PageLayout';
 import type { Session } from './types';
 import { useNavigate } from 'react-router-dom';
 import { MainActionButton } from '../../components/MainActionButton';
+import { useTranslation } from 'react-i18next';
 
 const ExercisesContainer = styled(Container)`
   flex: 1 1 auto;
@@ -36,6 +37,7 @@ const SessionItem = styled(Card)`
   align-items: start;
   padding: 1rem;
   gap: 0.5rem;
+  cursor: pointer;
 `;
 
 const SessionDescription = styled(Box)`
@@ -63,7 +65,7 @@ export const SessionList: React.FC = () => {
   const sessions = useAppSelector(selectAllSession);
   const isLoading = useAppSelector(selectIsLoading);
   const navigate = useNavigate();
-
+  const { t } = useTranslation();
   const goToSession = (sessionId: Session['id']) => {
     navigate(`/sessions/${sessionId}`);
   };
@@ -79,14 +81,15 @@ export const SessionList: React.FC = () => {
           <SessionDescription>
             <Typography variant="h6">{session.sport.name}</Typography>
             {!session.endDate && (
-              <OngoingChip label="En cours" color="secondary" />
+              <OngoingChip label={t('sessions.ongoing')} color="secondary" />
             )}
           </SessionDescription>
-          <SessionDescription>
-            <Typography>
-              {`${new Date(session.startDate).toLocaleDateString()} - ${session.name}`}
-            </Typography>
-          </SessionDescription>
+          {/* <SessionDescription> */}
+          <Typography>{session.name}</Typography>
+          <Typography>
+            {new Date(session.startDate).toLocaleDateString()}
+          </Typography>
+          {/* </SessionDescription> */}
           <ExercisesLine>
             {session.sessionExercises?.map(sessionExercise => (
               <Chip
@@ -99,7 +102,7 @@ export const SessionList: React.FC = () => {
         </SessionItem>
       ));
     } else {
-      return <Typography>Vous n'avez aucune session pour le moment</Typography>;
+      return <Typography>{t('sessions.noSession')}</Typography>;
     }
   };
 
@@ -108,7 +111,7 @@ export const SessionList: React.FC = () => {
   }, []);
 
   return (
-    <PageLayout title="All sessions" isLoading={isLoading}>
+    <PageLayout title={t('sessions.title')} isLoading={isLoading}>
       <ExercisesContainer>{displaySessions()}</ExercisesContainer>
       <MainActionButton onClick={goToNewSession} />
     </PageLayout>

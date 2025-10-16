@@ -6,10 +6,10 @@ import { Dashboard } from './features/dashboard/Dashboard';
 import { ExercisePage } from './features/exercise/ExercisePage';
 import { NewSession } from './features/session/NewSession';
 import { SessionList } from './features/session/SessionList';
-import { MenuLayout } from './components/MenuLayout';
 import { SettingsPage } from './features/settings/SettingsPage';
 import { HealthPage } from './features/health/HealthPage';
 import { OngoingSession } from './features/session/OngoingSession';
+import { MenuLayout } from './components/menu/MenuLayout';
 
 export const AppRouter = () => (
   <AuthGate>

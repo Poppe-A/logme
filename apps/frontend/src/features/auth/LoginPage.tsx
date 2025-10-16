@@ -9,6 +9,7 @@ import {
 import { useState, type FormEvent } from 'react';
 import { useLoginMutation } from './authApi';
 import styled from '@emotion/styled';
+import { useTranslation } from 'react-i18next';
 
 const LoginPageContainer = styled(Container)`
   display: flex;
@@ -29,6 +30,7 @@ const FormContainer = styled('form')`
 `;
 
 export function LoginPage() {
+  const { t } = useTranslation();
   const [login, { isLoading, error }] = useLoginMutation();
 
   const [email, setEmail] = useState('');
@@ -45,16 +47,16 @@ export function LoginPage() {
       <FormCard elevation={2}>
         <FormContainer onSubmit={handleSubmit}>
           <Typography variant="h2" color="primary">
-            Login
+            {t('auth.login')}
           </Typography>
           <TextField
-            label="email"
+            label={t('auth.email')}
             value={email}
             onChange={e => setEmail(e.target.value)}
             required
           />
           <TextField
-            label="password"
+            label={t('auth.password')}
             value={password}
             onChange={e => setPassword(e.target.value)}
             type="password"
@@ -65,10 +67,10 @@ export function LoginPage() {
             <CircularProgress />
           ) : (
             <Button variant="contained" type="submit">
-              Submit
+              {t('common.confirm')}
             </Button>
           )}
-          {Boolean(error) && <Typography>Erreur lors du loggin</Typography>}
+          {Boolean(error) && <Typography>{t('auth.loginError')}</Typography>}
         </FormContainer>
       </FormCard>
     </LoginPageContainer>

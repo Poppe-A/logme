@@ -31,7 +31,7 @@ export interface Session {
 export interface SessionExercise {
   id: number;
   exercise: Exercise;
-  earlierSessionWithSets?: EarlierSessionForInformation;
+  earlierSessionsWithSets?: EarlierSessionForInformation[];
 }
 
 export interface INewSessionFormData {

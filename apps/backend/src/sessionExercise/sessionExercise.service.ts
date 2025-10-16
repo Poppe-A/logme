@@ -53,7 +53,7 @@ export class SessionExerciseService {
     sessionExercise: SessionExercise,
     userId: User['id'],
   ) {
-    let formattedEarlierSession: EarlierSessionForInformation | null = null;
+    let formattedEarlierSession: EarlierSessionForInformation[] | null = null;
 
     const earlierSessionWithSets =
       await this.sessionService.findLastByUserAndSessionExerciseId(
@@ -61,17 +61,21 @@ export class SessionExerciseService {
         sessionExercise.exercise.id,
       );
 
-    if (earlierSessionWithSets) {
-      formattedEarlierSession = {
-        name: earlierSessionWithSets.name,
-        startDate: earlierSessionWithSets.startDate,
-        sets: earlierSessionWithSets.sessionExercises[0].sets,
-      };
+    console.log('earlierSessionWithSets', earlierSessionWithSets.length);
+    if (earlierSessionWithSets.length) {
+      formattedEarlierSession = earlierSessionWithSets
+        .map((session) => ({
+          name: session.name,
+          startDate: session.startDate,
+          sets: session.sessionExercises[0].sets,
+        }))
+        .sort((a, b) => a.startDate.getTime() - b.startDate.getTime());
     }
+    console.log(formattedEarlierSession);
 
     return {
       ...sessionExercise,
-      earlierSessionWithSets: formattedEarlierSession,
+      earlierSessionsWithSets: formattedEarlierSession,
     };
   }
 

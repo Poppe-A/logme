@@ -49,6 +49,14 @@ const theme = createTheme({
       fontWeight: 600,
       fontSize: '1.5rem',
     },
+    h4: {
+      fontWeight: 600,
+      fontSize: '1rem',
+    },
+    // h5: {
+    //   fontWeight: 600,
+    //   fontSize: '0.5rem',
+    // },
     button: {
       textTransform: 'none',
       fontWeight: 600,
@@ -116,6 +124,14 @@ const theme = createTheme({
         },
       },
     },
+    // MuiDivider: {
+    //   styleOverrides: {
+    //     root: ({ theme }) => ({
+    //       borderColor: theme.palette.secondary.main,
+    //       // ou .light ou .dark selon vos préférences
+    //     }),
+    //   },
+    // },
   },
 });
 

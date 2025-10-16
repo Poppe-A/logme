@@ -12,6 +12,7 @@ import styled from '@emotion/styled';
 import { Box } from '@mui/material';
 import { capitalizeFirstLetter } from '../../utils/format';
 import { GenericModal } from '../../components/GenericModal';
+import { useTranslation } from 'react-i18next';
 
 const FormContainer = styled(Box)`
   display: flex;
@@ -33,6 +34,7 @@ export const ExerciseForm: React.FC<IExerciseForm> = ({
   onSubmit,
   closeModal,
 }) => {
+  const { t } = useTranslation();
   const { handleSubmit, control, reset } = useForm<Exercise>({
     values: {
       name: exercise?.name || '',
@@ -66,24 +68,24 @@ export const ExerciseForm: React.FC<IExerciseForm> = ({
       open={isOpen}
       handleConfirm={handleSubmit(submitForm, handleError)}
       handleClose={closeModal}
-      title={exercise ? 'Update exercise' : 'New exercise'}
+      title={exercise ? t('exercises.update') : t('exercises.add')}
     >
       <FormContainer>
         <FormTextField
           control={control}
           name="name"
-          label="Name"
+          label={t('exercises.name')}
           fieldType={FIELD_TYPE.TEXT}
           required
         />
         <Controller
           name="type"
           control={control}
-          rules={{ required: 'Type is required' }}
+          rules={{ required: t('exercises.typeRequired') }}
           render={({ field, fieldState }) => (
             <GenericSelect
               onChange={e => field.onChange(e.target.value)}
-              label="Type"
+              label={t('exercises.type')}
               items={buildTypeItems()}
               value={field.value}
               required
@@ -94,19 +96,19 @@ export const ExerciseForm: React.FC<IExerciseForm> = ({
         <FormTextField
           control={control}
           name="altName"
-          label="Alternative name"
+          label={t('exercises.altName')}
           fieldType={FIELD_TYPE.TEXT}
         />
         <FormTextField
           control={control}
           name="secondAltName"
-          label="Second alternative name"
+          label={t('exercises.secondAltName')}
           fieldType={FIELD_TYPE.TEXT}
         />
         <FormTextField
           control={control}
           name="description"
-          label="Description"
+          label={t('exercises.description')}
           fieldType={FIELD_TYPE.TEXT}
         />
       </FormContainer>

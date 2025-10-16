@@ -21,15 +21,17 @@ interface IMainActionButton {
   onClick: () => void;
   label?: string;
   icon?: ReactNode;
+  disabled?: boolean;
 }
 
 export const MainActionButton: React.FC<IMainActionButton> = ({
   onClick,
   label,
   icon,
+  disabled,
 }) => {
   return (
-    <StyledButton onClick={onClick} sx={{ boxShadow: 2 }}>
+    <StyledButton onClick={onClick} sx={{ boxShadow: 2 }} disabled={disabled}>
       {label ? (
         <Typography>{label}</Typography>
       ) : icon ? (

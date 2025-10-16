@@ -7,6 +7,7 @@ import {
   useColorScheme,
 } from '@mui/material';
 import { PageLayout } from '../../components/PageLayout';
+import { useTranslation } from 'react-i18next';
 
 const SettingsContainer = styled(Box)`
   padding-left: 3rem;
@@ -15,13 +16,13 @@ const SettingsContainer = styled(Box)`
 
 export const SettingsPage: React.FC = () => {
   const { mode, setMode } = useColorScheme();
-
+  const { t } = useTranslation();
   const toggleThemeMode = (darkMode: boolean) => {
     setMode(darkMode ? 'dark' : 'light');
   };
 
   return (
-    <PageLayout title="Settings">
+    <PageLayout title={t('account.settings')}>
       <SettingsContainer>
         <FormGroup>
           <FormControlLabel
@@ -31,7 +32,7 @@ export const SettingsPage: React.FC = () => {
                 onChange={ev => toggleThemeMode(ev.target.checked)}
               />
             }
-            label="Dark mode"
+            label={t('account.darkMode')}
           />
         </FormGroup>
       </SettingsContainer>

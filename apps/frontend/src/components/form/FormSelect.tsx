@@ -18,6 +18,7 @@ interface IFormSelect<T extends FieldValues> {
   items: ISelectItem[];
   multiple?: boolean;
   renderValue?: () => string;
+  required?: boolean;
 }
 
 export const FormSelect = <T extends FieldValues>({
@@ -27,12 +28,19 @@ export const FormSelect = <T extends FieldValues>({
   items,
   multiple = false,
   renderValue,
+  required = false,
 }: IFormSelect<T>) => {
+  const rules = {
+    required: required ? `${name} is required` : undefined,
+  };
+
   return (
     <Controller
       name={name}
       control={control}
-      render={({ field: { onChange, value } }) => {
+      rules={rules}
+      render={({ field: { onChange, value }, fieldState }) => {
+        console.log('error', fieldState.error);
         return (
           <GenericSelect
             label={label}
@@ -41,6 +49,8 @@ export const FormSelect = <T extends FieldValues>({
             items={items}
             multiple={multiple}
             renderValue={renderValue}
+            required={required}
+            error={fieldState.error}
           />
         );
       }}
