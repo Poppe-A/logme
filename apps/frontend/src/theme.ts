@@ -67,7 +67,6 @@ const theme = createTheme({
       styleOverrides: {
         'html, body, #root': {
           height: '100vh',
-          // todo check if fine on mobile
           width: '100%',
           margin: 0,
           padding: 0,

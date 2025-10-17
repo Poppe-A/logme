@@ -1,28 +1,59 @@
-import { MigrationInterface, QueryRunner } from "typeorm";
+import {
+  MigrationInterface,
+  QueryRunner,
+  Table,
+  TableForeignKey,
+  TableUnique,
+} from 'typeorm';
 
 export class CreateHealth1760647902496 implements MigrationInterface {
+  public async up(queryRunner: QueryRunner): Promise<void> {
+    await queryRunner.createTable(
+      new Table({
+        name: 'health',
+        columns: [
+          {
+            name: 'id',
+            type: 'int',
+            isPrimary: true,
+            isGenerated: true,
+            generationStrategy: 'increment',
+          },
+          { name: 'user_id', type: 'int' },
+          { name: 'value', type: 'text' },
+          { name: 'date', type: 'date' },
+          { name: 'type', type: 'enum', enum: ['weight', 'heart_rate'] },
+        ],
+      }),
+    );
 
-    public async up(queryRunner: QueryRunner): Promise<void> {
-        new Table({
-            name: 'set',
-            columns: [
-              {
-                name: 'id',
-                type: 'int',
-                isPrimary: true,
-                isGenerated: true,
-                generationStrategy: 'increment',
-              },
-              { name: 'repetitions', type: 'int' },
-              { name: 'weight', type: 'int', isNullable: true },
-              { name: 'order', type: 'int' },
-              { name: 'session_exercise_id', type: 'int' },
-            ],
-          }),
-    
-    }
+    await queryRunner.createForeignKey(
+      'health',
+      new TableForeignKey({
+        name: 'FK_health_user',
+        columnNames: ['user_id'],
+        referencedColumnNames: ['id'],
+        referencedTableName: 'user',
+        onDelete: 'CASCADE',
+      }),
+    );
 
-    public async down(queryRunner: QueryRunner): Promise<void> {
-    }
+    // Ajouter la contrainte d'unicité pour user_id, date et type
+    await queryRunner.createUniqueConstraint(
+      'health',
+      new TableUnique({
+        name: 'UQ_health_user_date_type',
+        columnNames: ['user_id', 'date', 'type'],
+      }),
+    );
+  }
 
+  public async down(queryRunner: QueryRunner): Promise<void> {
+    await queryRunner.dropUniqueConstraint(
+      'health',
+      'UQ_health_user_date_type',
+    );
+    await queryRunner.dropForeignKey('health', 'FK_health_user');
+    await queryRunner.dropTable('health');
+  }
 }

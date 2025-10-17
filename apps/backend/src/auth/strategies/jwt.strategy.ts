@@ -13,7 +13,7 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
     const jwtSecret = configService.get<string>('ACCESS_JWT_SECRET', {
       infer: true,
     });
-
+    console.log('--- JWT STRATEGY', jwtSecret);
     if (!jwtSecret) {
       throw new Error(
         "JWT_ACCESS_SECRET n'est pas défini dans la configuration.",
