@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Session } from './session.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { IsNull, Not, Repository } from 'typeorm';
+import { IsNull, LessThan, Not, Repository } from 'typeorm';
 import { User } from '../user/user.entity';
 import { Sport } from '../sport/sport.entity';
 import { CreateSessionDto, EditSessionDto } from './session.type';
@@ -42,22 +42,40 @@ export class SessionService {
     });
   }
 
-  findLastByUserAndSessionExerciseId(
+  async findLastByUserAndSessionExerciseId(
     userId: User['id'],
     sessionExerciseExerciseId: SessionExercise['exercise']['id'],
+    maxdate: Session['startDate'],
   ) {
-    console.log('--- sessionExercise');
-    return this.sessionRepository.find({
+    console.log('--- findLastByUserAndSessionExerciseId');
+    const sessions = await this.sessionRepository.find({
       where: {
         user: { id: userId },
         sessionExercises: { exercise: { id: sessionExerciseExerciseId } },
         endDate: Not(IsNull()),
+        startDate: LessThan(maxdate),
       },
       relations: { sessionExercises: { exercise: true, sets: true } },
       order: {
         startDate: 'DESC',
       },
       take: 2,
+    });
+    console.log(
+      '--- sessions',
+      sessions.map((session) => session),
+    );
+
+    // Filtrer les sessions pour ne garder que celles où le sessionExercise concerné a des sets
+    return sessions.filter((session) => {
+      const sessionExercise = session.sessionExercises?.find(
+        (se) => se?.exercise.id === sessionExerciseExerciseId,
+      );
+      return (
+        sessionExercise &&
+        sessionExercise.sets &&
+        sessionExercise.sets.length > 0
+      );
     });
   }
 

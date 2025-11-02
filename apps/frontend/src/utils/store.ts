@@ -34,7 +34,10 @@ export const store = configureStore({
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
 
-createApiClient('http://localhost:3000/api/v1', store.getState, store.dispatch);
+// Initialiser l'API client avec l'URL depuis les variables d'environnement
+const apiBaseUrl =
+  import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000/api/v1';
+createApiClient(apiBaseUrl, store.getState, store.dispatch);
 
 export const useAppDispatch = () => useDispatch<AppDispatch>();
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;

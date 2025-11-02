@@ -1,0 +1,47 @@
+# Exclure tout sauf ce qui est nécessaire pour les Dockerfiles
+# Ce fichier est utilisé pour optimiser le contexte Docker
+
+# Node modules (seront réinstallés dans les conteneurs)
+**/node_modules
+node_modules
+
+# Fichiers de build (seront rebuildés)
+**/dist
+dist
+
+# Fichiers de cache
+**/.cache
+.cache
+**/tsconfig.build.tsbuildinfo
+
+# Fichiers de logs
+**/*.log
+logs
+
+# Fichiers Git
+.git
+.gitignore
+.github
+
+# Documentation
+**/*.md
+README.md
+
+# Fichiers de configuration IDE
+.vscode
+.idea
+*.code-workspace
+
+# Fichiers temporaires
+**/.temp
+**/.tmp
+.temp
+.tmp
+
+# Fichiers Docker (éviter la récursion)
+docker-compose*.yml
+Dockerfile*
+
+# Scripts et configs non nécessaires pour le build
+scripts
+apache

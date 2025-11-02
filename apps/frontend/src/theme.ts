@@ -1,12 +1,22 @@
 // theme.ts
 import { createTheme } from '@mui/material/styles';
 
+// Extension du type Theme pour ajouter des propriétés personnalisées
+declare module '@mui/material/styles' {
+  interface TypeBackground {
+    card: string; // Nouvelle propriété personnalisée
+  }
+}
+
 const theme = createTheme({
   colorSchemes: {
     dark: {
       palette: {
         primary: {
           main: '#32a852',
+        },
+        background: {
+          card: '#1e1e1e', // Gris foncé pour le mode dark
         },
       },
     },
@@ -28,6 +38,7 @@ const theme = createTheme({
     background: {
       // default: '#ccd9ed',
       paper: '#ffffff',
+      card: '#f5f5f5', // Gris clair pour le mode light
     },
     text: {
       primary: '#1b1b1b',
@@ -50,8 +61,8 @@ const theme = createTheme({
       fontSize: '1.5rem',
     },
     h4: {
-      fontWeight: 600,
-      fontSize: '1rem',
+      fontWeight: 400,
+      fontSize: '1.1rem',
     },
     // h5: {
     //   fontWeight: 600,

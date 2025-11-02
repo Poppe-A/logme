@@ -33,6 +33,7 @@ import { useTranslation } from 'react-i18next';
 const SetsContainer = styled(Box)`
   display: flex;
   flex-direction: column;
+  align-items: start;
   gap: 1rem;
   margin-top: 2rem;
   width: 100%;
@@ -52,8 +53,13 @@ const AccordionDetailsContent = styled(Box)`
   gap: 0.5rem;
 `;
 
-const StyleButton = styled(Button)`
+const StyledButton = styled(Typography)`
   align-self: flex-start;
+  padding: 0%;
+  border-bottom: 1px solid ${({ theme }) => theme.palette.primary.main};
+  cursor: pointer;
+  color: ${({ theme }) => theme.palette.primary.main};
+  font-weight: bold;
 `;
 
 const OutlinedButtonContainer = styled(Box)`
@@ -190,17 +196,14 @@ export const SessionExerciseDetail: React.FC<ISessionExerciseDetail> = ({
       <AccordionDetails>
         <AccordionDetailsContent>
           {sessionExercise.earlierSessionsWithSets ? (
-            <StyleButton
-              variant="outlined"
-              size="small"
+            <StyledButton
+              // variant="outlined"
               onClick={togglePreviousSession}
             >
-              {!displayPreviousSession ? (
-                t('sessions.previousSessions')
-              ) : (
-                <Close />
-              )}
-            </StyleButton>
+              {!displayPreviousSession
+                ? t('sessions.previousSessions')
+                : t('sessions.previousSessionsHide')}
+            </StyledButton>
           ) : null}
           {displayPreviousSession &&
           sessionExercise.earlierSessionsWithSets?.length

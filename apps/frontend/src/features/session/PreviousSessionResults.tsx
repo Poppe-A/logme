@@ -3,6 +3,7 @@ import type { EarlierSessionForInformation } from './types';
 import { format } from 'date-fns';
 
 const EarlierSessionContainer = styled(Box)`
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: start;

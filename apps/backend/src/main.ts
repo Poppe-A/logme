@@ -8,7 +8,11 @@ async function bootstrap() {
   app.use(cookieParser());
   app.setGlobalPrefix('api/v1');
   app.enableCors({
-    origin: ['http://localhost:5173', 'http://localhost:4173'],
+    origin: [
+      'http://localhost:5173',
+      'http://localhost:4173',
+      'https://logme.apoppe.com',
+    ], // todo dans .env
     credentials: true,
     // allowedHeaders: ['content-type'],
   });

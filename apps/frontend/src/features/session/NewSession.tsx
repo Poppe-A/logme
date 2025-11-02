@@ -143,7 +143,7 @@ export const NewSession: React.FC = () => {
 
         {displayExercises && (
           <>
-            <Typography>{t('sessions.sessionExercise')} :</Typography>
+            <Typography>{t('sessions.sessionExercise')}</Typography>
             <Typography variant="caption">
               {t('sessions.exercisesComment')}
             </Typography>

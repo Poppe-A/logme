@@ -1,4 +1,11 @@
-import { Box, Card, Chip, Container, styled, Typography } from '@mui/material';
+import {
+  Box,
+  Chip,
+  Container,
+  styled,
+  Typography,
+  type Theme,
+} from '@mui/material';
 import { useAppDispatch, useAppSelector } from '../../utils/store';
 import {
   getAllSession,
@@ -12,13 +19,13 @@ import { useNavigate } from 'react-router-dom';
 import { MainActionButton } from '../../components/MainActionButton';
 import { useTranslation } from 'react-i18next';
 
-const ExercisesContainer = styled(Container)`
+const SessionsContainer = styled(Container)`
   flex: 1 1 auto;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
   min-height: 0;
-  padding: 0;
+  padding-inline: 1rem;
 `;
 
 // POURQUOI MIN HEIGHT 0
@@ -31,14 +38,16 @@ const ExercisesContainer = styled(Container)`
 //   displayModal: (exercise: Exercise) => void;
 // }
 
-const SessionItem = styled(Card)`
-  display: flex;
-  flex-direction: column;
-  align-items: start;
-  padding: 1rem;
-  gap: 0.5rem;
-  cursor: pointer;
-`;
+const SessionItem = styled(Container)<{ theme?: Theme }>(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'start',
+  padding: '1rem',
+  gap: '0.5rem',
+  cursor: 'pointer',
+  backgroundColor: theme?.palette.background.card, // Couleur personnalisée définie dans le thème
+  overflow: 'hidden',
+}));
 
 const SessionDescription = styled(Box)`
   display: flex;
@@ -53,7 +62,8 @@ const ExercisesLine = styled(Box)`
   flex-direction: row;
   gap: 1rem;
   margin-top: 0.5rem;
-  overflow: hidden;
+  width: 100%;
+  overflow-x: scroll;
 `;
 
 const OngoingChip = styled(Chip)`
@@ -112,7 +122,7 @@ export const SessionList: React.FC = () => {
 
   return (
     <PageLayout title={t('sessions.title')} isLoading={isLoading}>
-      <ExercisesContainer>{displaySessions()}</ExercisesContainer>
+      <SessionsContainer>{displaySessions()}</SessionsContainer>
       <MainActionButton onClick={goToNewSession} />
     </PageLayout>
   );

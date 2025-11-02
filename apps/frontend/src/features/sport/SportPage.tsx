@@ -1,4 +1,5 @@
 import { Box, Typography } from '@mui/material';
+import type { Theme } from '@mui/material/styles';
 import {
   useCreateSportMutation,
   useGetSportsQuery,
@@ -16,16 +17,18 @@ import { ChevronRight } from '@mui/icons-material';
 import { MainActionButton } from '../../components/MainActionButton';
 import { useTranslation } from 'react-i18next';
 
-const SportItem = styled(CardWithLongPress)`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding-block: 0.3rem;
-  padding-left: 1.3rem;
-  padding-right: 0.3rem;
-  padding: 2rem;
-  cursor: pointer;
-`;
+const SportItem = styled(CardWithLongPress)<{ theme?: Theme }>(({ theme }) => ({
+  display: 'flex',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  paddingBlock: '0.3rem',
+  paddingLeft: '1.3rem',
+  paddingRight: '0.3rem',
+  padding: '2rem',
+  cursor: 'pointer',
+  marginInline: '1rem',
+  backgroundColor: theme?.palette.background.card, // Couleur personnalisée définie dans le thème
+}));
 
 const StyledBox = styled(Box)`
   flex: 1 1 auto;
@@ -73,7 +76,9 @@ export function SportsPage() {
           onLongPress={() => displayModal(sport)}
           elevation={0}
         >
-          <Typography>{capitalizeFirstLetter(sport.name)}</Typography>
+          <Typography variant="h4">
+            {capitalizeFirstLetter(sport.name)}
+          </Typography>
           <ChevronRight />
         </SportItem>
       ));

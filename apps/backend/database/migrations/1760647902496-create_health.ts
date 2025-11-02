@@ -3,7 +3,7 @@ import {
   QueryRunner,
   Table,
   TableForeignKey,
-  TableUnique,
+  TableIndex,
 } from 'typeorm';
 
 export class CreateHealth1760647902496 implements MigrationInterface {
@@ -38,21 +38,19 @@ export class CreateHealth1760647902496 implements MigrationInterface {
       }),
     );
 
-    // Ajouter la contrainte d'unicité pour user_id, date et type
-    await queryRunner.createUniqueConstraint(
+    // Ajouter l'index unique pour user_id, date et type
+    await queryRunner.createIndex(
       'health',
-      new TableUnique({
+      new TableIndex({
         name: 'UQ_health_user_date_type',
         columnNames: ['user_id', 'date', 'type'],
+        isUnique: true,
       }),
     );
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropUniqueConstraint(
-      'health',
-      'UQ_health_user_date_type',
-    );
+    await queryRunner.dropIndex('health', 'UQ_health_user_date_type');
     await queryRunner.dropForeignKey('health', 'FK_health_user');
     await queryRunner.dropTable('health');
   }
