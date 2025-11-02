@@ -18,32 +18,33 @@ services:
 
   back:
     build:
-      context: ./apps/backend
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: ./apps/backend/Dockerfile.dev
     container_name: logme-back
     ports:
       - 3000:3000
+      - 9229:9229
     env_file:
       - ./apps/backend/.env
     volumes:
-      - ./apps/backend/:/app
-      # - ./packages/shared:/app/apps/back/shared
-    # working_dir: /app/apps/backend
+      # - ./apps/backend:/app/apps/backend
+      - .:/app
+    working_dir: /app/apps/backend
     depends_on:
       - db
     command: sleep infinity
 
   frontend:
     build:
-      context: ./apps/frontend
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: ./apps/frontend/Dockerfile.dev
     container_name: logme-front
-    volumes:
-      - ./apps/frontend/:/app
-       # - /app/node_modules
     ports:
       - 5173:5173
       - 4173:4173
+    volumes:
+      - ./apps/frontend:/app/apps/frontend
+    working_dir: /app/apps/frontend
     restart: on-failure:3
     command: sleep infinity
 

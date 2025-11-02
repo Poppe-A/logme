@@ -1,6 +1,6 @@
 {
-	"folders": [
-		{
+  "folders": [
+    {
       "path": ".",
       "name": "Root",
     },
@@ -12,5 +12,8 @@
       "path": "apps/frontend",
       "name": "frontend",
     },
-	] 
+  ],
+  "settings": {
+    "i18n-ally.localesPaths": ["apps/frontend/public/locales"],
+  },
 }

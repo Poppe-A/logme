@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import type { Exercise } from './exerciseApi';
-import { Container, Typography } from '@mui/material';
+import { Container, Typography, type Theme } from '@mui/material';
 // import AdaptiveMultiColumnList from '../../components/AdaptiveMultiColumnList';
 import { CardWithLongPress } from '../../components/CardWithLongPress';
 import { ChevronRight } from '@mui/icons-material';
@@ -14,16 +14,19 @@ const ExercisesContainer = styled(Container)`
   min-height: 0;
 `;
 
-const ExerciseItem = styled(CardWithLongPress)`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding-block: 0.3rem;
-  padding-left: 1.3rem;
-  padding-right: 0.3rem;
-  padding: 2rem;
-  cursor: pointer;
-`;
+const ExerciseItem = styled(CardWithLongPress)<{ theme?: Theme }>(
+  ({ theme }) => ({
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingBlock: '0.3rem',
+    paddingLeft: '1.3rem',
+    paddingRight: '0.3rem',
+    padding: '2rem',
+    cursor: 'pointer',
+    backgroundColor: theme?.palette.background.card, // Couleur personnalisée définie dans le thème
+  }),
+);
 
 // POURQUOI MIN HEIGHT 0
 // Dans un parent flex en colonne, si le dernier enfant a height: auto par défaut, il peut dépasser le parent.
@@ -51,7 +54,9 @@ export const ExerciseList: React.FC<IExerciseList> = ({
         onClick={() => displayContentDrawer(exercise)}
         onLongPress={() => displayEditionModal(exercise)}
       >
-        <Typography>{capitalizeFirstLetter(exercise.name)}</Typography>
+        <Typography variant="h4">
+          {capitalizeFirstLetter(exercise.name)}
+        </Typography>
         <ChevronRight />
       </ExerciseItem>
     ));

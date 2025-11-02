@@ -1,0 +1,50 @@
+# .dockerignore pour le backend
+# Ce fichier override le .dockerignore racine pour le build backend
+
+# Node modules (seront réinstallés)
+node_modules
+
+# Fichiers de build (seront rebuildés)
+dist
+
+# Fichiers de cache
+.cache
+tsconfig.build.tsbuildinfo
+
+# Fichiers de logs
+*.log
+logs
+
+# Fichiers Git
+.git
+.gitignore
+
+# Documentation
+*.md
+README.md
+
+# Fichiers de configuration IDE
+.vscode
+.idea
+
+# Fichiers temporaires
+.temp
+.tmp
+
+# Fichiers Docker (éviter la récursion)
+Dockerfile
+docker-compose*.yml
+
+# Fichiers de test
+test
+*.spec.ts
+*.e2e-spec.ts
+test.js
+
+# Fichiers d'environnement
+.env
+.env.*
+
+# Exclure le frontend (pas nécessaire pour le build backend)
+../frontend
+

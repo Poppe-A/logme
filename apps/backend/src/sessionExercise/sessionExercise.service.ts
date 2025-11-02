@@ -43,7 +43,11 @@ export class SessionExerciseService {
 
     const sessionsFormattedWithEarlierSessionsData = sessionExercises.map(
       (sessionExercise) =>
-        this.getFormattedEarlierSessionExercise(sessionExercise, userId),
+        this.getFormattedEarlierSessionExercise(
+          sessionExercise,
+          userId,
+          session.startDate,
+        ),
     );
 
     return Promise.all(sessionsFormattedWithEarlierSessionsData);
@@ -52,6 +56,7 @@ export class SessionExerciseService {
   async getFormattedEarlierSessionExercise(
     sessionExercise: SessionExercise,
     userId: User['id'],
+    maxdate: Session['startDate'],
   ) {
     let formattedEarlierSession: EarlierSessionForInformation[] | null = null;
 
@@ -59,16 +64,23 @@ export class SessionExerciseService {
       await this.sessionService.findLastByUserAndSessionExerciseId(
         userId,
         sessionExercise.exercise.id,
+        maxdate,
       );
 
     console.log('earlierSessionWithSets', earlierSessionWithSets.length);
     if (earlierSessionWithSets.length) {
+      const exerciseId = sessionExercise.exercise.id;
       formattedEarlierSession = earlierSessionWithSets
-        .map((session) => ({
-          name: session.name,
-          startDate: session.startDate,
-          sets: session.sessionExercises[0].sets,
-        }))
+        .map((session) => {
+          const matchingSessionExercise = session.sessionExercises?.find(
+            (se) => se.exercise?.id === exerciseId,
+          );
+          return {
+            name: session.name,
+            startDate: session.startDate,
+            sets: matchingSessionExercise?.sets || [],
+          };
+        })
         .sort((a, b) => a.startDate.getTime() - b.startDate.getTime());
     }
     console.log(formattedEarlierSession);
