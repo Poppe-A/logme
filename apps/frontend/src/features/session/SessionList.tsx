@@ -108,7 +108,7 @@ export const SessionList: React.FC = () => {
 
   useEffect(() => {
     dispatch(getAllSession());
-  }, []);
+  }, [dispatch]);
 
   return (
     <PageLayout title={t('sessions.title')} isLoading={isLoading}>

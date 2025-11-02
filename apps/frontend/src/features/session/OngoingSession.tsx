@@ -98,14 +98,14 @@ export const OngoingSession: React.FC = () => {
       dispatch(getSessionExercises(+sessionId));
       dispatch(getAllSetsBySessionId(+sessionId));
     }
-  }, [sessionId]);
+  }, [sessionId, dispatch]);
 
   useEffect(() => {
     if (sessionSliceState === SliceState.FINISHED && !session) {
       console.log('session error');
       // todo redirect and display message
     }
-  }, [sessionSliceState]);
+  }, [sessionSliceState, session]);
 
   useEffect(() => {
     setIsFinishedSession(Boolean(session?.endDate));

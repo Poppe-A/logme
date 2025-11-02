@@ -24,7 +24,7 @@ export default function AuthGate({ children }: { children: React.ReactNode }) {
         dispatch(setAuthenticatedUser({ user: null }));
         navigate('/login');
       });
-  }, [refreshToken, dispatch]);
+  }, [refreshToken, dispatch, navigate]);
 
   useEffect(() => {
     if (!isLoading) {
@@ -34,7 +34,7 @@ export default function AuthGate({ children }: { children: React.ReactNode }) {
         navigate('/login');
       }
     }
-  }, [accessToken, isLoading]);
+  }, [accessToken, isLoading, navigate]);
 
   if (isLoading) {
     return <div>Chargement...</div>;
