@@ -40,7 +40,6 @@ export const FormSelect = <T extends FieldValues>({
       control={control}
       rules={rules}
       render={({ field: { onChange, value }, fieldState }) => {
-        console.log('error', fieldState.error);
         return (
           <GenericSelect
             label={label}

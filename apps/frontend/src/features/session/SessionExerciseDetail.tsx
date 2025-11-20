@@ -3,8 +3,9 @@ import {
   AccordionDetails,
   AccordionSummary,
   Box,
-  Button,
+  IconButton,
   styled,
+  TextField,
   Typography,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -24,11 +25,12 @@ import {
 } from 'react-hook-form';
 import type { Set, UpsertSetDto } from '../set/types';
 import { SetRow } from './SetRow';
-import { Add, Close, InfoOutline, Save } from '@mui/icons-material';
-import { useState, type MouseEvent } from 'react';
+import { Add, Check, InfoOutline, Save } from '@mui/icons-material';
+import { useEffect, useState, type MouseEvent } from 'react';
 import { PreviousSessionResults } from './PreviousSessionResults';
 import { OutlinedIconButton } from '../../components/OutlinedIconButton';
 import { useTranslation } from 'react-i18next';
+import { updateSessionExerciseComment } from './sessionSlice';
 
 const SetsContainer = styled(Box)`
   display: flex;
@@ -39,6 +41,9 @@ const SetsContainer = styled(Box)`
   width: 100%;
 `;
 
+const StyledAccordionDetails = styled(AccordionDetails)`
+  padding-top: 0;
+`;
 const AccordionSummaryContent = styled(Box)`
   display: flex;
   gap: 1rem;
@@ -68,6 +73,18 @@ const OutlinedButtonContainer = styled(Box)`
   margin-top: 0.5rem;
 `;
 
+const CommentLine = styled(Box)`
+  display: flex;
+  gap: 1rem;
+  justify-content: start;
+  margin-top: 1rem;
+  width: 100%;
+`;
+
+const CommentTextField = styled(TextField)`
+  width: 80%;
+`;
+
 interface ISessionExerciseDetail {
   sessionExercise: SessionExercise;
   sessionId: Session['id'];
@@ -83,10 +100,13 @@ export const SessionExerciseDetail: React.FC<ISessionExerciseDetail> = ({
 }) => {
   const { t } = useTranslation();
   const [displayPreviousSession, setDisplayPreviousSession] = useState(false);
+  const [comment, setComment] = useState('');
   const dispatch = useAppDispatch();
+
   const sets = useAppSelector(store =>
     selectSetsBySessionExerciseId(store, sessionExercise.id),
   );
+
   const formatDataToFormSet = (sets: Set[]): FormSet[] => {
     return sets.map(set => ({
       id: set.id,
@@ -98,7 +118,6 @@ export const SessionExerciseDetail: React.FC<ISessionExerciseDetail> = ({
   const {
     control,
     handleSubmit,
-
     formState: { isDirty },
   } = useForm<FormValue>({
     values: {
@@ -158,18 +177,36 @@ export const SessionExerciseDetail: React.FC<ISessionExerciseDetail> = ({
     });
   };
 
+  const onCommentSave = () => {
+    dispatch(
+      updateSessionExerciseComment({
+        id: sessionExercise.id,
+        sessionId,
+        comment,
+      }),
+    );
+  };
+
   const displayExerciseDetails = (e: MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
     onDisplayExerciseDetail();
   };
 
   const onError: SubmitErrorHandler<FormValue> = data => {
-    console.log('error', data);
+    console.log('session exercise error a', data);
   };
 
   const togglePreviousSession = () => {
     setDisplayPreviousSession(!displayPreviousSession);
   };
+
+  useEffect(() => {
+    console.log('Ben oué');
+    if (sessionExercise.comment) {
+      console.log('--- set comment', sessionExercise.comment);
+      setComment(sessionExercise.comment);
+    }
+  }, [sessionExercise.comment]);
 
   // useEffect(() => {
   //   console.log('--- addNewLine');
@@ -193,7 +230,7 @@ export const SessionExerciseDetail: React.FC<ISessionExerciseDetail> = ({
           </Box>
         </AccordionSummaryContent>
       </AccordionSummary>
-      <AccordionDetails>
+      <StyledAccordionDetails>
         <AccordionDetailsContent>
           {sessionExercise.earlierSessionsWithSets ? (
             <StyledButton
@@ -213,7 +250,22 @@ export const SessionExerciseDetail: React.FC<ISessionExerciseDetail> = ({
                 />
               ))
             : null}
-
+          <CommentLine>
+            <CommentTextField
+              value={comment}
+              onChange={e => setComment(e.target.value)}
+              label={t('sessions.comment')}
+              disabled={disabled}
+              size="small"
+              fullWidth
+              multiline
+            />
+            {!disabled && comment !== sessionExercise.comment && (
+              <IconButton onClick={onCommentSave}>
+                <Check />
+              </IconButton>
+            )}
+          </CommentLine>
           <SetsContainer>
             {fields.length ? (
               fields.map((field, index) => (
@@ -247,7 +299,7 @@ export const SessionExerciseDetail: React.FC<ISessionExerciseDetail> = ({
             </OutlinedButtonContainer>
           )}
         </AccordionDetailsContent>
-      </AccordionDetails>
+      </StyledAccordionDetails>
     </Accordion>
   );
 };

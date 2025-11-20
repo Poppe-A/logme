@@ -16,3 +16,7 @@ export interface EarlierSessionForInformation {
   startDate: Session['startDate'];
   sets: Set[];
 }
+
+export interface UpsertCommentDto {
+  comment: string;
+}

@@ -19,10 +19,7 @@ const ExerciseItem = styled(CardWithLongPress)<{ theme?: Theme }>(
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingBlock: '0.3rem',
-    paddingLeft: '1.3rem',
-    paddingRight: '0.3rem',
-    padding: '2rem',
+    padding: '1rem',
     cursor: 'pointer',
     backgroundColor: theme?.palette.background.card, // Couleur personnalisée définie dans le thème
   }),

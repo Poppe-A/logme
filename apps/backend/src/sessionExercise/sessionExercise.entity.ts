@@ -1,4 +1,5 @@
 import {
+  Column,
   Entity,
   JoinColumn,
   ManyToOne,
@@ -31,6 +32,9 @@ export class SessionExercise {
 
   @OneToMany(() => Set, (set) => set.sessionExercise)
   sets: Set[];
+
+  @Column({ type: 'varchar', default: '' })
+  comment: string;
 
   earlierSessionsWithSets?: EarlierSessionForInformation[] | null;
 }

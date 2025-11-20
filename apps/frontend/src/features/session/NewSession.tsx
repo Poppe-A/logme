@@ -22,6 +22,7 @@ import { useAppDispatch } from '../../utils/store';
 import { createSessionWithExercises } from './sessionSlice';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { FormAutoComplete } from '../../components/form/FormAutocomplete';
 
 const FormContainer = styled(Box)`
   width: 100%;
@@ -76,20 +77,23 @@ export const NewSession: React.FC = () => {
   };
 
   const buildExerciseItems = (): ISelectItem[] => {
+    console.log('test');
     return exercises
-      ? exercises.map(exercise => ({
-          value: exercise.id as number,
-          label: exercise.name,
-        }))
+      ? exercises
+          .filter(
+            exercise => !selectedExercises.find(ex => ex.value === exercise.id),
+          )
+          .map(exercise => ({
+            value: exercise.id as number,
+            label: exercise.name,
+          }))
       : [];
   };
 
   const getSelectedExerciseNames = (): string[] => {
-    const selectedExercisesNames = selectedExercises.map(exerciseId => {
-      const exercise = exercises?.find(ex => ex.id === exerciseId);
-      return capitalizeFirstLetter(exercise?.name || '');
+    const selectedExercisesNames = selectedExercises.map(exercise => {
+      return capitalizeFirstLetter(exercise.label || '');
     });
-
     return selectedExercisesNames.filter(ex => Boolean(ex));
   };
 
@@ -97,6 +101,7 @@ export const NewSession: React.FC = () => {
     const createdSessionId = await dispatch(
       createSessionWithExercises({
         ...data,
+        exercises: selectedExercises.map(ex => ex.value),
         startDate: data.startDate.toDate(),
       }),
     ).unwrap();
@@ -104,7 +109,7 @@ export const NewSession: React.FC = () => {
   };
 
   const handleErrors: SubmitErrorHandler<INewSessionFormData> = async data => {
-    console.log('error', data);
+    console.log('new sessionerror', data);
   };
 
   return (
@@ -143,17 +148,17 @@ export const NewSession: React.FC = () => {
 
         {displayExercises && (
           <>
-            <Typography>{t('sessions.sessionExercise')}</Typography>
+            <Typography>{t('sessions.sessionExerciseChoice')}</Typography>
             <Typography variant="caption">
               {t('sessions.exercisesComment')}
             </Typography>
 
-            <FormSelect
+            <FormAutoComplete
               control={control}
               name="exercises"
               label={t('sessions.exercisesLabel')}
               items={buildExerciseItems()}
-              renderValue={() => getSelectedExerciseNames().join(', ')}
+              // renderValue={() => getSelectedExerciseNames().join(', ')}
               multiple
             />
 

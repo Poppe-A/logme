@@ -60,7 +60,7 @@ export const ExerciseForm: React.FC<IExerciseForm> = ({
   };
 
   const handleError: SubmitErrorHandler<Exercise> = error => {
-    console.log('error', error);
+    console.log('exercise form error', error);
   };
 
   return (

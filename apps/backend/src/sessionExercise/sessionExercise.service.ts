@@ -43,7 +43,7 @@ export class SessionExerciseService {
 
     const sessionsFormattedWithEarlierSessionsData = sessionExercises.map(
       (sessionExercise) =>
-        this.getFormattedEarlierSessionExercise(
+        this.getFormattedSessionExerciseWithPreviousSets(
           sessionExercise,
           userId,
           session.startDate,
@@ -53,7 +53,25 @@ export class SessionExerciseService {
     return Promise.all(sessionsFormattedWithEarlierSessionsData);
   }
 
-  async getFormattedEarlierSessionExercise(
+  async findById(sessionExerciseId: SessionExercise['id'], userId: User['id']) {
+    const sessionExercise = await this.sessionExerciseRepository.findOne({
+      where: { id: sessionExerciseId },
+      relations: { session: true, exercise: true },
+      select: { session: { id: true, name: true, startDate: true } },
+    });
+
+    if (sessionExercise) {
+      return this.getFormattedSessionExerciseWithPreviousSets(
+        sessionExercise,
+        userId,
+        sessionExercise?.session.startDate,
+      );
+    }
+
+    // todo handle error
+  }
+
+  async getFormattedSessionExerciseWithPreviousSets(
     sessionExercise: SessionExercise,
     userId: User['id'],
     maxdate: Session['startDate'],
@@ -67,17 +85,18 @@ export class SessionExerciseService {
         maxdate,
       );
 
-    console.log('earlierSessionWithSets', earlierSessionWithSets.length);
+    console.log('earlierSessionWith Sets', earlierSessionWithSets.length);
     if (earlierSessionWithSets.length) {
       const exerciseId = sessionExercise.exercise.id;
       formattedEarlierSession = earlierSessionWithSets
         .map((session) => {
           const matchingSessionExercise = session.sessionExercises?.find(
-            (se) => se.exercise?.id === exerciseId,
+            (sessionExercise) => sessionExercise.exercise?.id === exerciseId,
           );
           return {
             name: session.name,
             startDate: session.startDate,
+            comment: matchingSessionExercise?.comment || '',
             sets: matchingSessionExercise?.sets || [],
           };
         })
@@ -106,4 +125,13 @@ export class SessionExerciseService {
   //     await this.sessionRepository.update(sessionId, editSessionDto);
   //     return this.sessionRepository.findOne({ where: { id: sessionId } });
   //   }
+
+  async upsertComment(
+    id: SessionExercise['id'],
+    userId: User['id'],
+    comment: SessionExercise['comment'],
+  ) {
+    await this.sessionExerciseRepository.update({ id }, { comment });
+    return this.findById(id, userId);
+  }
 }

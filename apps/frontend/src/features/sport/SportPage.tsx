@@ -21,10 +21,7 @@ const SportItem = styled(CardWithLongPress)<{ theme?: Theme }>(({ theme }) => ({
   display: 'flex',
   justifyContent: 'space-between',
   alignItems: 'center',
-  paddingBlock: '0.3rem',
-  paddingLeft: '1.3rem',
-  paddingRight: '0.3rem',
-  padding: '2rem',
+  padding: '1rem',
   cursor: 'pointer',
   marginInline: '1rem',
   backgroundColor: theme?.palette.background.card, // Couleur personnalisée définie dans le thème

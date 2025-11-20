@@ -3,6 +3,7 @@ import type { Exercise } from '../exercise/exerciseApi';
 import type { Sport } from '../sport/sportApi';
 import type { Set } from '../set/types';
 import type { Control, FieldValues } from 'react-hook-form';
+import type { ISelectItem } from '../../components/form/FormSelect';
 
 export interface CreateSessionDto {
   sportId: Sport['id'];
@@ -32,13 +33,14 @@ export interface SessionExercise {
   id: number;
   exercise: Exercise;
   earlierSessionsWithSets?: EarlierSessionForInformation[];
+  comment: string;
 }
 
 export interface INewSessionFormData {
   name: Session['name'];
   startDate: Dayjs;
   sportId: Sport['id'] | undefined;
-  exercises: Exercise['id'][];
+  exercises: ISelectItem[];
 }
 
 export interface FormSet {
@@ -62,5 +64,12 @@ export interface ISetRow<TFieldValues extends FieldValues> {
 export interface EarlierSessionForInformation {
   name: Session['name'];
   startDate: Session['startDate'];
+  comment: SessionExercise['comment'];
   sets: Set[];
+}
+
+export interface UpdateSessionExerciseCommentDto {
+  id: SessionExercise['id'];
+  sessionId: Session['id'];
+  comment: SessionExercise['comment'];
 }

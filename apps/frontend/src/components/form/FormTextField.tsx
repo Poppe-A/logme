@@ -84,6 +84,7 @@ export function FormTextField<T extends FieldValues>({
           width={width}
           onBlur={onBlur}
           disabled={disabled}
+          // maxRows={}
         />
       )}
     />

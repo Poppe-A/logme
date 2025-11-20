@@ -47,7 +47,7 @@ export const SportForm: React.FC<ISportForm> = ({
   };
 
   const handleError: SubmitErrorHandler<Sport> = error => {
-    console.log('error', error);
+    console.log('sport form error', error);
   };
 
   return (

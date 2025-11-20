@@ -4,6 +4,7 @@ import type {
   Session,
   SessionExercise,
   UpdateSessionDto,
+  UpdateSessionExerciseCommentDto,
 } from './types';
 import { getApiClient } from '../../utils/axiosInstance';
 import type { AxiosError } from 'axios';
@@ -119,7 +120,7 @@ export const getSessionExercises = createAsyncThunk<
   try {
     const apiClient = getApiClient();
     const response = await apiClient.get<SessionExercise[]>(
-      `/sessions/${sessionId}/exercises`,
+      `/sessions/${sessionId}/session-exercises`,
     );
 
     return response;
@@ -128,6 +129,27 @@ export const getSessionExercises = createAsyncThunk<
     throw Error(error.message);
   }
 });
+
+export const updateSessionExerciseComment = createAsyncThunk<
+  SessionExercise,
+  UpdateSessionExerciseCommentDto
+>(
+  'session/update-session-exercise-comment',
+  async ({ id, sessionId, comment }) => {
+    try {
+      const apiClient = getApiClient();
+      const response = await apiClient.patch<SessionExercise>(
+        `/sessions/${sessionId}/session-exercises/${id}/comment`,
+        { comment },
+      );
+
+      return response;
+    } catch (err: unknown) {
+      const error = err as AxiosError;
+      throw Error(error.message);
+    }
+  },
+);
 
 const sessionSlice = createSlice({
   name: 'session',
@@ -190,6 +212,20 @@ const sessionSlice = createSlice({
       })
       .addCase(updateSession.rejected, state => {
         // à voir
+        state.isLoading = false;
+      })
+      .addCase(updateSessionExerciseComment.pending, state => {
+        state.isLoading = true;
+      })
+      .addCase(updateSessionExerciseComment.fulfilled, (state, action) => {
+        state.sessionExercises = state.sessionExercises.map(sessionExercise =>
+          sessionExercise.id === action.payload.id
+            ? action.payload
+            : sessionExercise,
+        );
+        state.isLoading = false;
+      })
+      .addCase(updateSessionExerciseComment.rejected, state => {
         state.isLoading = false;
       });
   },

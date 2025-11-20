@@ -9,6 +9,7 @@ const EarlierSessionContainer = styled(Box)`
   align-items: start;
   gap: 0.5rem;
   border: white 1px solid;
+  border-radius: 3px;
   /* margin-top: 1rem; */
   padding: 0.5rem;
 `;
@@ -41,6 +42,11 @@ export const PreviousSessionResults: React.FC<IPreviousSessionResults> = ({
         {earlierSessionResults.name} -{' '}
         {format(earlierSessionResults.startDate, 'd/MM/y')}
       </StyledTypography>
+      {earlierSessionResults.comment && (
+        <Typography variant="caption">
+          {earlierSessionResults.comment}
+        </Typography>
+      )}
       <SetsContainer>
         {earlierSessionResults.sets.map((set, index) => (
           <>

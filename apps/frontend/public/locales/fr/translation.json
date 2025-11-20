@@ -56,8 +56,8 @@
     "sessionDate": "Date de la séance",
     "sessionSport": "Choisissez un sport",
     "sportLabel": "Sport",
-    "sessionExercise": "Choisissez vos exercices :",
-    "exercisesComment": "Vous aurez la possibilité de modifier cet liste par la suite",
+    "sessionExerciseChoice": "Choisissez vos exercices :",
+    "exercisesComment": "Vous aurez la possibilité de modifier cette liste par la suite",
     "exercisesLabel": "Exercices",
     "selectedExercises": "Exercices sélectionnés",
     "start": "Go !",
@@ -65,6 +65,7 @@
     "previousSessions": "Afficher les résultats précédents",
     "previousSessionsHide": "Masquer les résultats précédents",
     "noSeries": "Vous n'avez aucune série pour le moment.",
+    "comment": "Commentaire",
     "sets": {
       "set": "Série",
       "repetitions": "Répétitions",

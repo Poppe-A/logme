@@ -7,11 +7,11 @@ import { Delete } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
 
 const StyledRow = styled(Box)`
-  /* width: 100%; */
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 1rem;
+  gap: 0.7rem;
   /* padding-inline: 1rem; */
 `;
 
@@ -42,7 +42,7 @@ export const SetRow = ({
             label={t('sessions.sets.repetitions')}
             size="small"
             control={control}
-            width="SMALL_MEDIUM"
+            width="SMALL_MEDIUM" // todo use enum
             disabled={disabled}
           />
         )}
