@@ -28,14 +28,14 @@
     "welcome": "Bienvenue"
   },
   "sports": {
-    "title": "Sports",
+    "title": "Vos sports",
     "add": "Ajouter un sport",
     "update": "Editer un sport",
     "name": "Nom",
     "description": "Description"
   },
   "exercises": {
-    "title": "Exercices",
+    "title": "Vos exercices :",
     "noExercise": "Il n'y a pas encore d'exercices pour ce sport.",
     "add": "Ajouter un exercice",
     "update": "Editer un exercice",
@@ -65,7 +65,9 @@
     "previousSessions": "Afficher les résultats précédents",
     "previousSessionsHide": "Masquer les résultats précédents",
     "noSeries": "Vous n'avez aucune série pour le moment.",
+    "commentCaption": "Laisser un commentaire sur cet exercice :",
     "comment": "Commentaire",
+    "addSessionExercise": "Ajouter un exercice",
     "sets": {
       "set": "Série",
       "repetitions": "Répétitions",

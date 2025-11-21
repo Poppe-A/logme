@@ -12,7 +12,7 @@ import { useNavigate } from 'react-router';
 
 interface IPageLayout {
   title?: string;
-  subtitle?: string;
+  subtitle?: string | ReactElement;
   button?: ReactElement;
   isLoading?: boolean;
   displayBackArrow?: boolean;
@@ -67,7 +67,11 @@ export const PageLayout: React.FC<PropsWithChildren<IPageLayout>> = ({
           </StyledIconButton>
         )}
         {title && <Typography variant="h3">{title}</Typography>}
-        {subtitle && <Typography variant="h3">{subtitle}</Typography>}
+        {subtitle && typeof subtitle === 'string' ? (
+          <Typography variant="h4">{subtitle}</Typography>
+        ) : (
+          subtitle
+        )}
         {button}
       </StyledHeader>
       <Box sx={{ flex: 1, width: '100%', overflowY: 'auto' }}>

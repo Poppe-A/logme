@@ -1,5 +1,6 @@
 import { useAppDispatch, useAppSelector } from '../../utils/store';
 import {
+  createSessionExercise,
   getSession,
   getSessionExercises,
   selectSession,
@@ -14,12 +15,21 @@ import { PageLayout } from '../../components/PageLayout';
 import { SessionExerciseDetail } from './SessionExerciseDetail';
 import { getAllSetsBySessionId } from '../set/setSlice';
 import { ExerciseDrawer } from '../exercise/ExerciseDrawer';
-import type { Exercise } from '../exercise/exerciseApi';
+import { useGetExercisesQuery, type Exercise } from '../exercise/exerciseApi';
 import { MainActionButton } from '../../components/MainActionButton';
-import { DoneAllOutlined, Edit } from '@mui/icons-material';
-import { Box, styled, Typography } from '@mui/material';
+import { DoneAllOutlined, Edit, Save } from '@mui/icons-material';
+import {
+  Box,
+  Button,
+  IconButton,
+  styled,
+  TextField,
+  Typography,
+} from '@mui/material';
 import type { Session } from './types';
 import { formatDuration, intervalToDuration } from 'date-fns';
+import { GenericSelect } from '../../components/GenericSelect';
+import { useTranslation } from 'react-i18next';
 // const ExercisesContainer = styled(Container)`
 //   flex: 1 1 auto;
 //   display: flex;
@@ -46,17 +56,38 @@ const StyledBox = styled(Box)`
   padding-left: 2rem;
 `;
 
+const EditableSessionName = styled(Box)`
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  gap: 1rem;
+`;
+
+const AddExerciseContainer = styled(Box)`
+  margin-top: 1rem;
+`;
+
 export const OngoingSession: React.FC = () => {
+  const { t } = useTranslation();
   const session = useAppSelector(selectSession);
   const sessionExercises = useAppSelector(selectSessionExercises);
   const sessionSliceState = useAppSelector(selectSessionState);
   const dispatch = useAppDispatch();
   const { sessionId } = useParams();
+  const [sessionName, setSessionName] = useState('');
+  const [isEditSessionName, setIsEditSessionName] = useState(false);
+  const [isAddingExercise, setIsAddingExercise] = useState(false);
   const [isContentDrawerOpen, setIsContentDrawerOpen] = useState(false);
   const [selectedExercise, setSelectedExercise] = useState<Exercise | null>(
     null,
   );
   const [isFinishedSession, setIsFinishedSession] = useState(true);
+  const { data: exercises = [] } = useGetExercisesQuery({
+    sportId: session?.sport.id,
+  });
+
+  console.log('exercises', exercises, session?.sport.id);
+  // const canDisplayAddExercise = useMemo(() => {});
 
   const displayContentDrawer = (exercise: Exercise | null) => {
     setIsContentDrawerOpen(true);
@@ -81,6 +112,43 @@ export const OngoingSession: React.FC = () => {
     }
   };
 
+  const saveSessionName = () => {
+    if (session) {
+      if (isEditSessionName) {
+        dispatch(
+          updateSession({
+            sessionId: session.id,
+            name: sessionName,
+          }),
+        );
+      }
+      setIsEditSessionName(!isEditSessionName);
+    }
+  };
+
+  const displaySessionName = () => {
+    if (isFinishedSession) {
+      return sessionName;
+    } else {
+      return (
+        <EditableSessionName>
+          {isEditSessionName ? (
+            <TextField
+              value={sessionName}
+              onChange={e => setSessionName(e.target.value)}
+              label="Nom de la séance"
+            />
+          ) : (
+            <Typography variant="h4">{sessionName}</Typography>
+          )}
+          <IconButton onClick={saveSessionName}>
+            {isEditSessionName ? <Save /> : <Edit />}
+          </IconButton>
+        </EditableSessionName>
+      );
+    }
+  };
+
   const displaySessionDuration = (
     sessionStartDate: Session['startDate'],
     sessionEndDate: Session['endDate'],
@@ -92,6 +160,47 @@ export const OngoingSession: React.FC = () => {
     return <Typography>Durée : {formatDuration(duration)}</Typography>;
   };
 
+  const displayAddExercise = () => {
+    const exerciseList = exercises.filter(
+      exercise =>
+        !sessionExercises.find(
+          sessionExercise => sessionExercise.exercise.id === exercise.id,
+        ),
+    );
+
+    if (session && isAddingExercise && exerciseList.length) {
+      const exercisesItems = exerciseList.map(exercise => ({
+        value: exercise.id,
+        label: exercise.name,
+      }));
+
+      return (
+        <GenericSelect
+          items={exercisesItems}
+          label="Ajouter un exercice"
+          onChange={e => {
+            dispatch(
+              createSessionExercise({
+                sessionId: session.id,
+                exerciseId: e.target.value,
+              }),
+            );
+            setIsAddingExercise(false);
+          }}
+          handleOnBlur={() => setIsAddingExercise(false)}
+        />
+      );
+    } else if (session && !isAddingExercise && exerciseList.length) {
+      return (
+        <Button variant="contained" onClick={() => setIsAddingExercise(true)}>
+          {t('sessions.addSessionExercise')}
+        </Button>
+      );
+    } else {
+      return null;
+    }
+  };
+
   useEffect(() => {
     if (sessionId) {
       dispatch(getSession(+sessionId));
@@ -99,6 +208,12 @@ export const OngoingSession: React.FC = () => {
       dispatch(getAllSetsBySessionId(+sessionId));
     }
   }, [sessionId, dispatch]);
+
+  useEffect(() => {
+    if (session) {
+      setSessionName(session.name);
+    }
+  }, [session, dispatch]);
 
   useEffect(() => {
     if (sessionSliceState === SliceState.FINISHED && !session) {
@@ -115,7 +230,7 @@ export const OngoingSession: React.FC = () => {
     <>
       <PageLayout
         title={session?.sport.name}
-        subtitle={session?.name}
+        subtitle={displaySessionName()}
         isLoading={sessionSliceState !== SliceState.FINISHED}
       >
         <StyledBox>
@@ -135,6 +250,9 @@ export const OngoingSession: React.FC = () => {
               disabled={isFinishedSession}
             />
           ))}
+        {!isFinishedSession && (
+          <AddExerciseContainer>{displayAddExercise()}</AddExerciseContainer>
+        )}
         <MainActionButton
           onClick={endOrEditSession}
           icon={

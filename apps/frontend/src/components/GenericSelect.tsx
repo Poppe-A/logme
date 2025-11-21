@@ -21,6 +21,7 @@ interface IGenericSelect {
   error?: FieldError;
   multiple?: boolean;
   renderValue?: () => string;
+  handleOnBlur?: () => void;
 }
 export const GenericSelect: React.FC<IGenericSelect> = ({
   items,
@@ -31,6 +32,7 @@ export const GenericSelect: React.FC<IGenericSelect> = ({
   required = false,
   multiple = false,
   renderValue,
+  handleOnBlur,
 }) => {
   return (
     <FormControl required={required}>
@@ -42,6 +44,7 @@ export const GenericSelect: React.FC<IGenericSelect> = ({
         error={Boolean(error)}
         multiple={Boolean(multiple)}
         renderValue={renderValue}
+        onBlur={handleOnBlur}
       >
         {items.map(item => {
           return multiple && Array.isArray(value) ? (

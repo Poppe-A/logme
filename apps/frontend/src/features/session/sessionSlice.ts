@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import type {
   CreateSessionDto,
+  CreateSessionExerciseDto,
   Session,
   SessionExercise,
   UpdateSessionDto,
@@ -93,7 +94,7 @@ export const getSession = createAsyncThunk<Session, Session['id']>(
 
 export const updateSession = createAsyncThunk<Session, UpdateSessionDto>(
   'session/update',
-  async ({ sessionId, endDate, exercises, description }) => {
+  async ({ sessionId, endDate, exercises, description, name }) => {
     try {
       const apiClient = getApiClient();
       const response = await apiClient.patch<Session>(
@@ -102,6 +103,7 @@ export const updateSession = createAsyncThunk<Session, UpdateSessionDto>(
           endDate,
           exercises,
           description,
+          name,
         },
       );
 
@@ -121,6 +123,27 @@ export const getSessionExercises = createAsyncThunk<
     const apiClient = getApiClient();
     const response = await apiClient.get<SessionExercise[]>(
       `/sessions/${sessionId}/session-exercises`,
+    );
+
+    return response;
+  } catch (err: unknown) {
+    const error = err as AxiosError;
+    throw Error(error.message);
+  }
+});
+
+export const createSessionExercise = createAsyncThunk<
+  SessionExercise,
+  CreateSessionExerciseDto
+>('session/create-session-exercise', async createSessionExerciseDto => {
+  try {
+    const apiClient = getApiClient();
+    const response = await apiClient.post<SessionExercise>(
+      `/sessions/${createSessionExerciseDto.sessionId}/session-exercises`,
+      {
+        session: { id: createSessionExerciseDto.sessionId },
+        exercise: { id: createSessionExerciseDto.exerciseId },
+      },
     );
 
     return response;
@@ -212,6 +235,18 @@ const sessionSlice = createSlice({
       })
       .addCase(updateSession.rejected, state => {
         // à voir
+        state.isLoading = false;
+      })
+      .addCase(createSessionExercise.pending, state => {
+        state.isLoading = true;
+      })
+      .addCase(createSessionExercise.fulfilled, (state, action) => {
+        if (action.payload) {
+          state.sessionExercises = [...state.sessionExercises, action.payload];
+        }
+        state.isLoading = false;
+      })
+      .addCase(createSessionExercise.rejected, state => {
         state.isLoading = false;
       })
       .addCase(updateSessionExerciseComment.pending, state => {

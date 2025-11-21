@@ -35,7 +35,7 @@ export const ExercisePage: React.FC = () => {
   const { data: sports } = useGetSportsQuery();
   const selectedSport = sports?.find(s => s.id === sportId);
   const pageTitle = selectedSport
-    ? `${capitalizeFirstLetter(selectedSport.name)} - ${t('exercises.title')}`
+    ? `${capitalizeFirstLetter(selectedSport.name)}`
     : '';
 
   const displayEditionModal = (exercise: Exercise | null) => {
@@ -76,7 +76,11 @@ export const ExercisePage: React.FC = () => {
   }, [sports, isLoading, selectedSport, navigate]);
 
   return (
-    <PageLayout title={pageTitle} isLoading={isLoading} displayBackArrow>
+    <PageLayout
+      title={pageTitle}
+      subtitle={t('exercises.title')}
+      isLoading={isLoading}
+    >
       {exercises?.length ? (
         <ExerciseList
           exercises={exercises}

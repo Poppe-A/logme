@@ -65,6 +65,7 @@ const StyledButton = styled(Typography)`
   cursor: pointer;
   color: ${({ theme }) => theme.palette.primary.main};
   font-weight: bold;
+  margin-bottom: 0.2rem;
 `;
 
 const OutlinedButtonContainer = styled(Box)`
@@ -83,6 +84,13 @@ const CommentLine = styled(Box)`
 
 const CommentTextField = styled(TextField)`
   width: 80%;
+`;
+
+const StyledBox = styled(Box)`
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  width: 100%;
 `;
 
 interface ISessionExerciseDetail {
@@ -174,7 +182,7 @@ export const SessionExerciseDetail: React.FC<ISessionExerciseDetail> = ({
       } else if (!field.id) {
         updateFieldsPromises.push(dispatch(createSet(setToUpsert)));
       }
-    });
+    }); // todo c'est dégueu
   };
 
   const onCommentSave = () => {
@@ -208,14 +216,7 @@ export const SessionExerciseDetail: React.FC<ISessionExerciseDetail> = ({
     }
   }, [sessionExercise.comment]);
 
-  // useEffect(() => {
-  //   console.log('--- addNewLine');
-  //   if (!fields.length) {
-  //     addEmptySet();
-  //   }
-  // }, [fields.length]);
-
-  // memoize selector
+  // todo memoize selector
   return (
     <Accordion>
       <AccordionSummary
@@ -233,10 +234,7 @@ export const SessionExerciseDetail: React.FC<ISessionExerciseDetail> = ({
       <StyledAccordionDetails>
         <AccordionDetailsContent>
           {sessionExercise.earlierSessionsWithSets ? (
-            <StyledButton
-              // variant="outlined"
-              onClick={togglePreviousSession}
-            >
+            <StyledButton onClick={togglePreviousSession}>
               {!displayPreviousSession
                 ? t('sessions.previousSessions')
                 : t('sessions.previousSessionsHide')}
@@ -250,22 +248,27 @@ export const SessionExerciseDetail: React.FC<ISessionExerciseDetail> = ({
                 />
               ))
             : null}
-          <CommentLine>
-            <CommentTextField
-              value={comment}
-              onChange={e => setComment(e.target.value)}
-              label={t('sessions.comment')}
-              disabled={disabled}
-              size="small"
-              fullWidth
-              multiline
-            />
-            {!disabled && comment !== sessionExercise.comment && (
-              <IconButton onClick={onCommentSave}>
-                <Check />
-              </IconButton>
-            )}
-          </CommentLine>
+          <StyledBox>
+            <Typography variant="caption">
+              {t('sessions.commentCaption')}
+            </Typography>
+            <CommentLine>
+              <CommentTextField
+                value={comment}
+                onChange={e => setComment(e.target.value)}
+                label={t('sessions.comment')}
+                disabled={disabled}
+                size="small"
+                fullWidth
+                multiline
+              />
+              {!disabled && comment !== sessionExercise.comment && (
+                <IconButton onClick={onCommentSave}>
+                  <Check />
+                </IconButton>
+              )}
+            </CommentLine>
+          </StyledBox>
           <SetsContainer>
             {fields.length ? (
               fields.map((field, index) => (
@@ -281,7 +284,6 @@ export const SessionExerciseDetail: React.FC<ISessionExerciseDetail> = ({
               <Typography>{t('sessions.noSeries')}</Typography>
             )}
           </SetsContainer>
-
           {!disabled && (
             <OutlinedButtonContainer>
               {isDirty ? (
