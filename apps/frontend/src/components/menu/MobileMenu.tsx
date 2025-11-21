@@ -21,6 +21,12 @@ const PaddedBox = styled(Box)`
   padding-bottom: 3rem; /* hauteur BottomNav */
 `;
 
+const StyledBottomNavigation = styled(BottomNavigation)`
+  padding-inline: 0.5rem;
+`;
+const StyledBottomNavigationAction = styled(BottomNavigationAction)`
+  min-width: 0;
+`;
 interface IMobileMenuProps {
   navItems: { label: string; path: string; icon: React.ReactNode }[];
   activePath: string;
@@ -72,20 +78,20 @@ export const MobileMenu: React.FC<IMobileMenuProps> = ({
           right: 0,
         }}
       >
-        <BottomNavigation
+        <StyledBottomNavigation
           value={activePath}
           onChange={(event, newValue) => onChange(newValue, event)}
           showLabels
         >
           {navItems.map(item => (
-            <BottomNavigationAction
+            <StyledBottomNavigationAction
               key={item.path}
               label={item.label}
               value={item.path}
               icon={item.icon}
             />
           ))}
-        </BottomNavigation>
+        </StyledBottomNavigation>
         <Menu
           id="basic-menu"
           anchorEl={anchorEl}

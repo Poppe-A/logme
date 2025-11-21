@@ -49,14 +49,6 @@ const SessionItem = styled(Container)<{ theme?: Theme }>(({ theme }) => ({
   overflow: 'hidden',
 }));
 
-const SessionDescription = styled(Box)`
-  display: flex;
-  flex-direction: row;
-  gap: 0.5rem;
-  align-items: center;
-  width: 100%;
-`;
-
 const ExercisesLine = styled(Box)`
   display: flex;
   flex-direction: row;
@@ -68,6 +60,12 @@ const ExercisesLine = styled(Box)`
 
 const OngoingChip = styled(Chip)`
   margin-left: auto;
+`;
+
+const InfoLine = styled(Box)`
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
 `;
 
 export const SessionList: React.FC = () => {
@@ -88,18 +86,20 @@ export const SessionList: React.FC = () => {
     if (sessions.length) {
       return sessions.map(session => (
         <SessionItem onClick={() => goToSession(session.id)} key={session.id}>
-          <SessionDescription>
-            <Typography variant="h6">{session.sport.name}</Typography>
+          <InfoLine>
+            <Typography>
+              {new Date(session.startDate).toLocaleDateString()}
+            </Typography>
             {!session.endDate && (
-              <OngoingChip label={t('sessions.ongoing')} color="secondary" />
+              <OngoingChip
+                label={t('sessions.ongoing')}
+                color="secondary"
+                size="small"
+              />
             )}
-          </SessionDescription>
-          {/* <SessionDescription> */}
+          </InfoLine>
+          <Typography variant="h6">{session.sport.name}</Typography>
           <Typography>{session.name}</Typography>
-          <Typography>
-            {new Date(session.startDate).toLocaleDateString()}
-          </Typography>
-          {/* </SessionDescription> */}
           <ExercisesLine>
             {session.sessionExercises?.map(sessionExercise => (
               <Chip

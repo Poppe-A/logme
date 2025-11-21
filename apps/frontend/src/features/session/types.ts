@@ -15,7 +15,8 @@ export interface CreateSessionDto {
 
 export interface UpdateSessionDto {
   sessionId: Session['id'];
-  description?: 'string';
+  description?: Session['description'];
+  name?: Session['name'];
   endDate?: Date;
   exercises?: Exercise['id'][];
 }
@@ -23,6 +24,7 @@ export interface UpdateSessionDto {
 export interface Session {
   id: number;
   name: string;
+  description?: string;
   startDate: Date;
   endDate: Date;
   sport: Sport;
@@ -72,4 +74,9 @@ export interface UpdateSessionExerciseCommentDto {
   id: SessionExercise['id'];
   sessionId: Session['id'];
   comment: SessionExercise['comment'];
+}
+
+export interface CreateSessionExerciseDto {
+  sessionId: Session['id'];
+  exerciseId: Exercise['id'];
 }
