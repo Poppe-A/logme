@@ -68,6 +68,11 @@
     "commentCaption": "Laisser un commentaire sur cet exercice :",
     "comment": "Commentaire",
     "addSessionExercise": "Ajouter un exercice",
+    "deleteSessionExercise": "Supprimer l'exercice",
+    "deleteSessionExerciseText": "Les séries associées seront également supprimées",
+    "updateLabel": "Editer le nom de la session",
+    "deleteSession": "Supprimer la session",
+    "deleteSessionText": "Vous vous apprêtez à supprimer la session. Cette action est irreversible.",
     "sets": {
       "set": "Série",
       "repetitions": "Répétitions",

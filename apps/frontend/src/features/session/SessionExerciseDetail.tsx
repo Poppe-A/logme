@@ -3,6 +3,7 @@ import {
   AccordionDetails,
   AccordionSummary,
   Box,
+  Button,
   IconButton,
   styled,
   TextField,
@@ -25,12 +26,17 @@ import {
 } from 'react-hook-form';
 import type { Set, UpsertSetDto } from '../set/types';
 import { SetRow } from './SetRow';
-import { Add, Check, InfoOutline, Save } from '@mui/icons-material';
+import { Add, Check, Delete, InfoOutline, Save } from '@mui/icons-material';
 import { useEffect, useState, type MouseEvent } from 'react';
 import { PreviousSessionResults } from './PreviousSessionResults';
 import { OutlinedIconButton } from '../../components/OutlinedIconButton';
 import { useTranslation } from 'react-i18next';
-import { updateSessionExerciseComment } from './sessionSlice';
+import {
+  deleteSessionExercise,
+  updateSessionExerciseComment,
+} from './sessionSlice';
+import { GenericModal } from '../../components/GenericModal';
+import { capitalizeFirstLetter } from '../../utils/format';
 
 const SetsContainer = styled(Box)`
   display: flex;
@@ -39,6 +45,21 @@ const SetsContainer = styled(Box)`
   gap: 1rem;
   margin-top: 2rem;
   width: 100%;
+`;
+
+const StyledAccordion = styled(Accordion)`
+  margin-inline: 0.5rem;
+  margin-bottom: 0.5rem;
+  border-radius: 8px;
+  border: none;
+  border-bottom: 1px solid ${({ theme }) => theme.palette.background.card};
+  &::before {
+    display: none;
+  }
+  &.Mui-expanded {
+    margin-inline: 0.5rem !important;
+    margin-bottom: 0.5rem;
+  }
 `;
 
 const StyledAccordionDetails = styled(AccordionDetails)`
@@ -93,6 +114,14 @@ const StyledBox = styled(Box)`
   width: 100%;
 `;
 
+const ButtonsLine = styled(Box)`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-top: 1.5rem;
+`;
+
 interface ISessionExerciseDetail {
   sessionExercise: SessionExercise;
   sessionId: Session['id'];
@@ -109,6 +138,7 @@ export const SessionExerciseDetail: React.FC<ISessionExerciseDetail> = ({
   const { t } = useTranslation();
   const [displayPreviousSession, setDisplayPreviousSession] = useState(false);
   const [comment, setComment] = useState('');
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const dispatch = useAppDispatch();
 
   const sets = useAppSelector(store =>
@@ -208,6 +238,15 @@ export const SessionExerciseDetail: React.FC<ISessionExerciseDetail> = ({
     setDisplayPreviousSession(!displayPreviousSession);
   };
 
+  const onSessionExerciseDelete = () => {
+    dispatch(
+      deleteSessionExercise({
+        sessionId,
+        sessionExerciseId: sessionExercise.id,
+      }),
+    );
+  };
+
   useEffect(() => {
     console.log('Ben oué');
     if (sessionExercise.comment) {
@@ -218,14 +257,16 @@ export const SessionExerciseDetail: React.FC<ISessionExerciseDetail> = ({
 
   // todo memoize selector
   return (
-    <Accordion>
+    <StyledAccordion>
       <AccordionSummary
         expandIcon={<ExpandMoreIcon />}
         aria-controls="panel1-content"
         id="panel1-header"
       >
         <AccordionSummaryContent>
-          <Typography variant="h5">{sessionExercise.exercise.name}</Typography>
+          <Typography variant="h5">
+            {capitalizeFirstLetter(sessionExercise.exercise.name)}
+          </Typography>
           <Box component="span" onClick={displayExerciseDetails}>
             <InfoOutline fontSize="medium" />
           </Box>
@@ -284,24 +325,64 @@ export const SessionExerciseDetail: React.FC<ISessionExerciseDetail> = ({
               <Typography>{t('sessions.noSeries')}</Typography>
             )}
           </SetsContainer>
-          {!disabled && (
-            <OutlinedButtonContainer>
-              {isDirty ? (
-                <OutlinedIconButton
-                  onClick={handleSubmit(onSubmit, onError)}
-                  disabled={!isDirty}
-                >
-                  <Save color="primary" />
-                </OutlinedIconButton>
-              ) : (
-                <OutlinedIconButton onClick={addEmptySet} disabled={isDirty}>
-                  <Add color="primary" />
-                </OutlinedIconButton>
-              )}
-            </OutlinedButtonContainer>
-          )}
+          <ButtonsLine>
+            {!disabled && (
+              <OutlinedButtonContainer>
+                {isDirty ? (
+                  <Button
+                    onClick={handleSubmit(onSubmit, onError)}
+                    disabled={!isDirty}
+                    variant="contained"
+                  >
+                    Enregistrer l'exercice
+                  </Button>
+                ) : (
+                  // <OutlinedIconButton
+                  //   onClick={handleSubmit(onSubmit, onError)}
+                  //   disabled={!isDirty}
+                  // >
+                  //   <Save color="primary" />
+                  // </OutlinedIconButton>
+                  <Button
+                    onClick={addEmptySet}
+                    disabled={isDirty}
+                    variant="contained"
+                  >
+                    Ajouter une Série
+                  </Button>
+                  // <OutlinedIconButton onClick={addEmptySet} disabled={isDirty}>
+                  //   <Add color="primary" />
+                  // </OutlinedIconButton>
+                )}
+              </OutlinedButtonContainer>
+            )}
+            {!disabled && (
+              <OutlinedIconButton
+                onClick={() => setIsDeleteModalOpen(true)}
+                color="error"
+              >
+                <Delete color="error" />
+              </OutlinedIconButton>
+              // <Button
+              //   onClick={() => setIsDeleteModalOpen(true)}
+              //   variant="outlined"
+              //   color="error"
+              // >
+              //   {t('sessions.deleteSessionExercise')}
+              // </Button>
+            )}
+          </ButtonsLine>
         </AccordionDetailsContent>
       </StyledAccordionDetails>
-    </Accordion>
+      <GenericModal
+        open={isDeleteModalOpen}
+        handleClose={() => setIsDeleteModalOpen(false)}
+        handleConfirm={onSessionExerciseDelete}
+        title={t('sessions.deleteSessionExercise')}
+        children={
+          <Typography>{t('sessions.deleteSessionExerciseText')}</Typography>
+        }
+      />
+    </StyledAccordion>
   );
 };

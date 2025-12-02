@@ -20,7 +20,7 @@ export class SessionService {
     const session = await this.sessionRepository.findOne({
       where: { id },
       relations: { sport: true, user: true },
-      select: { sport: { name: true }, user: { id: true } },
+      select: { sport: { name: true, id: true }, user: { id: true } },
     });
 
     if (!session) {
@@ -113,7 +113,9 @@ export class SessionService {
         exercise: { id: exerciseId },
       }));
       console.log(sessionExercisesToCreate);
-      await this.sessionExerciseService.create(sessionExercisesToCreate);
+      await this.sessionExerciseService.createMultiple(
+        sessionExercisesToCreate,
+      );
     }
 
     return session.id;
@@ -130,5 +132,9 @@ export class SessionService {
       endDate,
     });
     return this.findById(sessionId);
+  }
+
+  async delete(sessionId: Session['id']): Promise<void> {
+    await this.sessionRepository.delete(sessionId);
   }
 }

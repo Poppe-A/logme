@@ -1,6 +1,7 @@
 import { useAppDispatch, useAppSelector } from '../../utils/store';
 import {
   createSessionExercise,
+  deleteSession,
   getSession,
   getSessionExercises,
   selectSession,
@@ -8,8 +9,8 @@ import {
   selectSessionState,
   updateSession,
 } from './sessionSlice';
-import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useEffect, useMemo, useState, type SyntheticEvent } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import { SliceState } from '../../utils/common';
 import { PageLayout } from '../../components/PageLayout';
 import { SessionExerciseDetail } from './SessionExerciseDetail';
@@ -17,7 +18,7 @@ import { getAllSetsBySessionId } from '../set/setSlice';
 import { ExerciseDrawer } from '../exercise/ExerciseDrawer';
 import { useGetExercisesQuery, type Exercise } from '../exercise/exerciseApi';
 import { MainActionButton } from '../../components/MainActionButton';
-import { DoneAllOutlined, Edit, Save } from '@mui/icons-material';
+import { DoneAllOutlined, Edit, MoreVert, Save } from '@mui/icons-material';
 import {
   Box,
   Button,
@@ -30,6 +31,8 @@ import type { Session } from './types';
 import { formatDuration, intervalToDuration } from 'date-fns';
 import { GenericSelect } from '../../components/GenericSelect';
 import { useTranslation } from 'react-i18next';
+import { GenericMenu, type MenuItem } from '../../components/menu/GenericMenu';
+import { GenericModal } from '../../components/GenericModal';
 // const ExercisesContainer = styled(Container)`
 //   flex: 1 1 auto;
 //   display: flex;
@@ -65,6 +68,9 @@ const EditableSessionName = styled(Box)`
 
 const AddExerciseContainer = styled(Box)`
   margin-top: 1rem;
+  margin-left: 0.5rem;
+  align-self: flex-start;
+  width: fit-content;
 `;
 
 export const OngoingSession: React.FC = () => {
@@ -83,11 +89,26 @@ export const OngoingSession: React.FC = () => {
   );
   const [isFinishedSession, setIsFinishedSession] = useState(true);
   const { data: exercises = [] } = useGetExercisesQuery({
-    sportId: session?.sport.id,
+    sportId: session?.sport?.id,
   });
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [isDeleteSessionModalOpen, setIsDeleteSessionModalOpen] =
+    useState(false);
+  const navigate = useNavigate();
 
-  console.log('exercises', exercises, session?.sport.id);
-  // const canDisplayAddExercise = useMemo(() => {});
+  const menuItems: MenuItem[] = useMemo(
+    () => [
+      {
+        label: t('sessions.updateLabel'),
+        action: () => setIsEditSessionName(true),
+      },
+      {
+        label: t('sessions.deleteSession'),
+        action: () => setIsDeleteSessionModalOpen(true),
+      },
+    ],
+    [],
+  );
 
   const displayContentDrawer = (exercise: Exercise | null) => {
     setIsContentDrawerOpen(true);
@@ -141,9 +162,11 @@ export const OngoingSession: React.FC = () => {
           ) : (
             <Typography variant="h4">{sessionName}</Typography>
           )}
-          <IconButton onClick={saveSessionName}>
-            {isEditSessionName ? <Save /> : <Edit />}
-          </IconButton>
+          {isEditSessionName && (
+            <IconButton onClick={saveSessionName}>
+              <Save />
+            </IconButton>
+          )}
         </EditableSessionName>
       );
     }
@@ -177,7 +200,7 @@ export const OngoingSession: React.FC = () => {
       return (
         <GenericSelect
           items={exercisesItems}
-          label="Ajouter un exercice"
+          label={t('sessions.addSessionExercise')}
           onChange={e => {
             dispatch(
               createSessionExercise({
@@ -199,6 +222,20 @@ export const OngoingSession: React.FC = () => {
     } else {
       return null;
     }
+  };
+
+  const onSessionDelete = async () => {
+    if (session?.id) {
+      await dispatch(deleteSession(session?.id));
+      navigate('/sessions');
+    }
+  };
+
+  const openMenu = (event: SyntheticEvent) => {
+    setAnchorEl(event.currentTarget as HTMLElement);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
   };
 
   useEffect(() => {
@@ -232,6 +269,11 @@ export const OngoingSession: React.FC = () => {
         title={session?.sport.name}
         subtitle={displaySessionName()}
         isLoading={sessionSliceState !== SliceState.FINISHED}
+        titleMenuButton={
+          <IconButton onClick={openMenu}>
+            <MoreVert />
+          </IconButton>
+        }
       >
         <StyledBox>
           {session?.endDate
@@ -268,6 +310,19 @@ export const OngoingSession: React.FC = () => {
         isOpen={isContentDrawerOpen}
         onClose={closeContentDrawer}
         exercise={selectedExercise}
+      />
+      <GenericMenu
+        id="session-menu"
+        anchor={anchorEl}
+        handleClose={handleClose}
+        menuItems={menuItems}
+      />
+      <GenericModal
+        open={isDeleteSessionModalOpen}
+        handleClose={() => setIsDeleteSessionModalOpen(false)}
+        handleConfirm={onSessionDelete}
+        title={t('sessions.deleteSession')}
+        children={<Typography>{t('sessions.deleteSessionText')}</Typography>}
       />
     </>
   );

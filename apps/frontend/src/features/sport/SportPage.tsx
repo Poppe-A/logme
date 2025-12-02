@@ -25,6 +25,7 @@ const SportItem = styled(CardWithLongPress)<{ theme?: Theme }>(({ theme }) => ({
   cursor: 'pointer',
   marginInline: '1rem',
   backgroundColor: theme?.palette.background.card, // Couleur personnalisée définie dans le thème
+  borderRadius: '8px',
 }));
 
 const StyledBox = styled(Box)`

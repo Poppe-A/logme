@@ -3,16 +3,15 @@ import {
   BottomNavigation,
   BottomNavigationAction,
   Box,
-  Menu,
-  MenuItem,
   Paper,
   styled,
 } from '@mui/material';
 
-import { useState, type SyntheticEvent } from 'react';
+import { useMemo, useState, type SyntheticEvent } from 'react';
 
 import { useLogoutMutation } from '../../features/auth/authApi';
 import { useTranslation } from 'react-i18next';
+import { GenericMenu } from './GenericMenu';
 
 const PaddedBox = styled(Box)`
   flex: 1 1 auto;
@@ -40,7 +39,6 @@ export const MobileMenu: React.FC<IMobileMenuProps> = ({
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const open = Boolean(anchorEl);
 
   const openMenu = (event: SyntheticEvent) => {
     setAnchorEl(event.currentTarget as HTMLElement);
@@ -61,6 +59,14 @@ export const MobileMenu: React.FC<IMobileMenuProps> = ({
       navigate(value);
     }
   };
+
+  const menuItems = useMemo(
+    () => [
+      { label: t('account.settings'), action: goToSettings },
+      { label: t('account.logout'), action: logout },
+    ],
+    [t],
+  );
 
   // add desktop menu
   return (
@@ -92,20 +98,12 @@ export const MobileMenu: React.FC<IMobileMenuProps> = ({
             />
           ))}
         </StyledBottomNavigation>
-        <Menu
-          id="basic-menu"
-          anchorEl={anchorEl}
-          open={open}
-          onClose={handleClose}
-          slotProps={{
-            list: {
-              'aria-labelledby': 'basic-button',
-            },
-          }}
-        >
-          <MenuItem onClick={goToSettings}>{t('account.settings')}</MenuItem>
-          <MenuItem onClick={() => logout()}>{t('account.logout')}</MenuItem>
-        </Menu>
+        <GenericMenu
+          id="app-menu"
+          anchor={anchorEl}
+          menuItems={menuItems}
+          handleClose={handleClose}
+        />
       </Paper>
     </>
   );

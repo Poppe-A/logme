@@ -110,7 +110,18 @@ export class SessionExerciseService {
     };
   }
 
-  async create(createSessionExerciseDto: CreateSessionExerciseDto[]) {
+  async create(
+    createSessionExerciseDto: CreateSessionExerciseDto,
+    userId: User['id'],
+  ) {
+    console.log('--- createSession exercise', createSessionExerciseDto);
+    const sessionExercise = await this.sessionExerciseRepository.save(
+      createSessionExerciseDto,
+    );
+    return this.findById(sessionExercise.id, userId);
+  }
+
+  async createMultiple(createSessionExerciseDto: CreateSessionExerciseDto[]) {
     await this.sessionExerciseRepository.save(createSessionExerciseDto);
   }
 

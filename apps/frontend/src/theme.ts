@@ -13,7 +13,7 @@ const theme = createTheme({
     dark: {
       palette: {
         primary: {
-          main: '#32a852',
+          main: '#7f1a99',
         },
         background: {
           card: '#1e1e1e', // Gris foncé pour le mode dark

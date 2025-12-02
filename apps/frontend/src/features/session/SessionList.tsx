@@ -47,6 +47,7 @@ const SessionItem = styled(Container)<{ theme?: Theme }>(({ theme }) => ({
   cursor: 'pointer',
   backgroundColor: theme?.palette.background.card, // Couleur personnalisée définie dans le thème
   overflow: 'hidden',
+  borderRadius: '8px',
 }));
 
 const ExercisesLine = styled(Box)`

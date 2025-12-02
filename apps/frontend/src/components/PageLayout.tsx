@@ -16,6 +16,7 @@ interface IPageLayout {
   button?: ReactElement;
   isLoading?: boolean;
   displayBackArrow?: boolean;
+  titleMenuButton?: ReactElement;
 }
 
 const PageContainer = styled(Box)`
@@ -39,6 +40,18 @@ const StyledHeader = styled(Container)`
   gap: 0.5rem;
 `;
 
+const TitleLine = styled(Box)`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+  align-items: center;
+`;
+
+const Title = styled(Typography)`
+  align-self: flex-start;
+`;
+
 const StyledIconButton = styled(IconButton)`
   align-self: self-start;
 `;
@@ -50,6 +63,7 @@ export const PageLayout: React.FC<PropsWithChildren<IPageLayout>> = ({
   button,
   children,
   displayBackArrow,
+  titleMenuButton,
 }) => {
   const navigate = useNavigate();
   const handleBackClick = (e: React.MouseEvent) => {
@@ -66,7 +80,12 @@ export const PageLayout: React.FC<PropsWithChildren<IPageLayout>> = ({
             <ArrowBack />
           </StyledIconButton>
         )}
-        {title && <Typography variant="h3">{title}</Typography>}
+        {title && (
+          <TitleLine>
+            <Title variant="h3">{title}</Title>
+            {titleMenuButton}
+          </TitleLine>
+        )}
         {subtitle && typeof subtitle === 'string' ? (
           <Typography variant="h4">{subtitle}</Typography>
         ) : (

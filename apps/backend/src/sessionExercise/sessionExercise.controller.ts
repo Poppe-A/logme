@@ -1,17 +1,22 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   ParseIntPipe,
   Patch,
+  Post,
   Req,
 } from '@nestjs/common';
 import { SessionExerciseService } from './sessionExercise.service';
 import { Session } from '../session/session.entity';
 import { SessionExercise } from './sessionExercise.entity';
 import { RequestWithMetadatas } from '../auth/auth.types';
-import { UpsertCommentDto } from './sessionExercise.type';
+import {
+  CreateSessionExerciseDto,
+  UpsertCommentDto,
+} from './sessionExercise.type';
 
 @Controller('sessions/:sessionId/session-exercises')
 export class SessionExerciseController {
@@ -25,6 +30,27 @@ export class SessionExerciseController {
       sessionId,
       +req.user.userId,
     );
+  }
+
+  @Post()
+  create(
+    @Param('sessionId', ParseIntPipe) sessionId: Session['id'],
+    @Body() createSessionExerciseDto: CreateSessionExerciseDto,
+    @Req() req: RequestWithMetadatas,
+  ): Promise<SessionExercise | undefined> {
+    return this.sessionExerciseService.create(
+      createSessionExerciseDto,
+      +req.user.userId,
+    );
+  }
+
+  @Delete('/:sessionExerciseId')
+  async deleteSessionExercise(
+    @Param('sessionExerciseId', ParseIntPipe)
+    sessionExerciseId: SessionExercise['id'],
+  ) {
+    // todo guard
+    return this.sessionExerciseService.delete(sessionExerciseId);
   }
 
   @Patch('/:sessionExerciseId/comment')

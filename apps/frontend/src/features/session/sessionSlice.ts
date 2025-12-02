@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import type {
   CreateSessionDto,
   CreateSessionExerciseDto,
+  DeleteSessionExerciseDto,
   Session,
   SessionExercise,
   UpdateSessionDto,
@@ -115,6 +116,21 @@ export const updateSession = createAsyncThunk<Session, UpdateSessionDto>(
   },
 );
 
+export const deleteSession = createAsyncThunk<Session['id'], Session['id']>(
+  'session/delete',
+  async sessionId => {
+    try {
+      const apiClient = getApiClient();
+      await apiClient.delete(`/sessions/${sessionId}`);
+
+      return sessionId;
+    } catch (err: unknown) {
+      const error = err as AxiosError;
+      throw Error(error.message);
+    }
+  },
+);
+
 export const getSessionExercises = createAsyncThunk<
   SessionExercise[],
   Session['id']
@@ -167,6 +183,25 @@ export const updateSessionExerciseComment = createAsyncThunk<
       );
 
       return response;
+    } catch (err: unknown) {
+      const error = err as AxiosError;
+      throw Error(error.message);
+    }
+  },
+);
+
+export const deleteSessionExercise = createAsyncThunk<
+  SessionExercise['id'],
+  DeleteSessionExerciseDto
+>(
+  'session/delete-session-exercise',
+  async ({ sessionId, sessionExerciseId }) => {
+    try {
+      const apiClient = getApiClient();
+      await apiClient.delete<void>(
+        `/sessions/${sessionId}/session-exercises/${sessionExerciseId}`,
+      );
+      return sessionExerciseId;
     } catch (err: unknown) {
       const error = err as AxiosError;
       throw Error(error.message);
@@ -262,6 +297,32 @@ const sessionSlice = createSlice({
       })
       .addCase(updateSessionExerciseComment.rejected, state => {
         state.isLoading = false;
+      })
+      .addCase(deleteSessionExercise.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.sessionExercises = state.sessionExercises.filter(
+          sessionExercise => sessionExercise.id !== action.payload,
+        );
+      })
+      .addCase(deleteSessionExercise.rejected, state => {
+        state.isLoading = false;
+        // display error
+      })
+      .addCase(deleteSessionExercise.pending, state => {
+        state.isLoading = true;
+      })
+      .addCase(deleteSession.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.sessions = state.sessions.filter(
+          session => session.id !== action.payload,
+        );
+      })
+      .addCase(deleteSession.rejected, state => {
+        state.isLoading = false;
+        // display error
+      })
+      .addCase(deleteSession.pending, state => {
+        state.isLoading = true;
       });
   },
 });

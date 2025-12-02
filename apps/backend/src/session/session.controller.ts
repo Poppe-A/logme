@@ -1,4 +1,13 @@
-import { Body, Controller, Get, Param, Patch, Post, Req } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Req,
+} from '@nestjs/common';
 import { Session } from './session.entity';
 import { SessionService } from './session.service';
 import { RequestWithMetadatas } from '../auth/auth.types';
@@ -50,5 +59,10 @@ export class SessionController {
     @Param('sessionId') sessionId: string,
   ): Promise<Session | null> {
     return this.sessionService.edit(+sessionId, editSessionDto);
+  }
+
+  @Delete('/:sessionId')
+  delete(@Param('sessionId') sessionId: string): Promise<void> {
+    return this.sessionService.delete(+sessionId);
   }
 }

@@ -80,3 +80,8 @@ export interface CreateSessionExerciseDto {
   sessionId: Session['id'];
   exerciseId: Exercise['id'];
 }
+
+export interface DeleteSessionExerciseDto {
+  sessionId: Session['id'];
+  sessionExerciseId: SessionExercise['id'];
+}
