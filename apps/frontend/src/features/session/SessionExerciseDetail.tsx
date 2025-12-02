@@ -26,7 +26,7 @@ import {
 } from 'react-hook-form';
 import type { Set, UpsertSetDto } from '../set/types';
 import { SetRow } from './SetRow';
-import { Add, Check, Delete, InfoOutline, Save } from '@mui/icons-material';
+import { Check, Delete, InfoOutline } from '@mui/icons-material';
 import { useEffect, useState, type MouseEvent } from 'react';
 import { PreviousSessionResults } from './PreviousSessionResults';
 import { OutlinedIconButton } from '../../components/OutlinedIconButton';
@@ -334,25 +334,16 @@ export const SessionExerciseDetail: React.FC<ISessionExerciseDetail> = ({
                     disabled={!isDirty}
                     variant="contained"
                   >
-                    Enregistrer l'exercice
+                    {t('sessions.saveSet')}
                   </Button>
                 ) : (
-                  // <OutlinedIconButton
-                  //   onClick={handleSubmit(onSubmit, onError)}
-                  //   disabled={!isDirty}
-                  // >
-                  //   <Save color="primary" />
-                  // </OutlinedIconButton>
                   <Button
                     onClick={addEmptySet}
                     disabled={isDirty}
                     variant="contained"
                   >
-                    Ajouter une Série
+                    {t('sessions.addSet')}
                   </Button>
-                  // <OutlinedIconButton onClick={addEmptySet} disabled={isDirty}>
-                  //   <Add color="primary" />
-                  // </OutlinedIconButton>
                 )}
               </OutlinedButtonContainer>
             )}
@@ -363,13 +354,6 @@ export const SessionExerciseDetail: React.FC<ISessionExerciseDetail> = ({
               >
                 <Delete color="error" />
               </OutlinedIconButton>
-              // <Button
-              //   onClick={() => setIsDeleteModalOpen(true)}
-              //   variant="outlined"
-              //   color="error"
-              // >
-              //   {t('sessions.deleteSessionExercise')}
-              // </Button>
             )}
           </ButtonsLine>
         </AccordionDetailsContent>

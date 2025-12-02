@@ -73,6 +73,8 @@
     "updateLabel": "Editer le nom de la session",
     "deleteSession": "Supprimer la session",
     "deleteSessionText": "Vous vous apprêtez à supprimer la session. Cette action est irreversible.",
+    "addSet": "Ajouter une Série",
+    "saveSet": "Enregistrer la série",
     "sets": {
       "set": "Série",
       "repetitions": "Répétitions",
