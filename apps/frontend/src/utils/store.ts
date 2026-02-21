@@ -13,6 +13,7 @@ import { sportApi } from '../features/sport/sportApi';
 import { exerciseApi } from '../features/exercise/exerciseApi';
 import { dashboardApi } from '../features/dashboard/dashboardApi';
 import { createApiClient } from './axiosInstance';
+import { settingApi } from '../features/settings/settingApi';
 
 export const store = configureStore({
   reducer: {
@@ -23,6 +24,7 @@ export const store = configureStore({
     [sportApi.reducerPath]: sportApi.reducer,
     [exerciseApi.reducerPath]: exerciseApi.reducer,
     [dashboardApi.reducerPath]: dashboardApi.reducer,
+    [settingApi.reducerPath]: settingApi.reducer,
   },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware().concat(
@@ -30,6 +32,7 @@ export const store = configureStore({
       sportApi.middleware,
       exerciseApi.middleware,
       dashboardApi.middleware,
+      settingApi.middleware,
     ),
 });
 

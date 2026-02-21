@@ -27,8 +27,8 @@ export const ExercisePage: React.FC = () => {
   const [selectedExercise, setSelectedExercise] = useState<Exercise | null>(
     null,
   );
-  const [createSport] = useCreateExerciseMutation();
-  const [updateSport] = useUpdateExerciseMutation();
+  const [createExercise] = useCreateExerciseMutation();
+  const [updateExercise] = useUpdateExerciseMutation();
 
   const { data: exercises, isLoading } = useGetExercisesQuery({ sportId });
 
@@ -60,12 +60,12 @@ export const ExercisePage: React.FC = () => {
 
   const onSubmit = (exercise: Exercise) => {
     if (selectedExercise) {
-      updateSport({
+      updateExercise({
         exercise: { id: selectedExercise.id, ...exercise },
         sportId,
       });
     } else {
-      createSport({ exercise, sportId });
+      createExercise({ exercise, sportId });
     }
   };
 

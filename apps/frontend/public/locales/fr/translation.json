@@ -97,7 +97,21 @@
   },
   "account": {
     "settings": "Paramètres",
-    "darkMode": "Dark mode",
     "logout": "Se déconnecter"
+  },
+  "settings": {
+    "global": "Général",
+    "theme": "Dark mode",
+    "language": "Language",
+    "fr": "Français",
+    "en": "Anglais",
+    "dashboard": "Dashboard",
+    "dashboardLastSessions": "Afficher les dernières séances",
+    "dashboardWeight": "Afficher le poids",
+    "dashboardHeartRate": "Afficher la fréquence cardiaque au repos",
+    "health": "Santé",
+    "healthWeight": "Enregistrer le poids",
+    "healthHeartRate": "Enregistrer la fréquence cardiaque au repos",
+    "save": "Enregistrer"
   }
 }

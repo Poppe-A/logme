@@ -37,11 +37,11 @@ export const ExerciseForm: React.FC<IExerciseForm> = ({
   const { t } = useTranslation();
   const { handleSubmit, control, reset } = useForm<Exercise>({
     values: {
-      name: exercise?.name || '',
-      type: exercise?.type || undefined,
-      description: exercise?.description || '',
-      altName: exercise?.altName || '',
-      secondAltName: exercise?.secondAltName || '',
+      name: exercise?.name ?? '',
+      type: exercise?.type ?? undefined,
+      description: exercise?.description ?? '',
+      altName: exercise?.altName ?? '',
+      secondAltName: exercise?.secondAltName ?? '',
     },
   });
 

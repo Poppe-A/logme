@@ -3,6 +3,7 @@ import { Health } from './health.entity';
 export enum HealthType {
   WEIGHT = 'weight',
   HEART_RATE = 'heart_rate',
+  BICEPS_SIZE = 'biceps_size',
 }
 
 export interface CreateHealthDto {
