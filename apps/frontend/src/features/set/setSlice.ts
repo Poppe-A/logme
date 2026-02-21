@@ -12,7 +12,6 @@ import type { AxiosError } from 'axios';
 export const getAllSetsBySessionId = createAsyncThunk<Set[], Session['id']>(
   'sets/all-sets-by-session-id',
   async sessionId => {
-    console.log('--- get sets');
     try {
       const apiClient = getApiClient();
       const response = await apiClient.get<Set[]>(
@@ -30,7 +29,6 @@ export const getAllSetsBySessionId = createAsyncThunk<Set[], Session['id']>(
 export const createSet = createAsyncThunk<Set, UpsertSetDto>(
   'sets/create',
   async ({ data, sessionId, sessionExerciseId }) => {
-    console.log('--- create sets');
     try {
       const apiClient = getApiClient();
       const response = await apiClient.post<Set>(
@@ -49,14 +47,12 @@ export const createSet = createAsyncThunk<Set, UpsertSetDto>(
 export const updateSet = createAsyncThunk<Set, UpsertSetDto>(
   'sets/update',
   async ({ data, sessionId, id, sessionExerciseId }) => {
-    console.log('--- update sets');
     try {
       const apiClient = getApiClient();
       const response = await apiClient.patch<Set>(
         `/sessions/${sessionId}/session-exercises/${sessionExerciseId}/sets/${id}`,
         data,
       );
-      console.log('--- res', response);
       return response;
     } catch (err: unknown) {
       const error = err as AxiosError;
@@ -68,13 +64,11 @@ export const updateSet = createAsyncThunk<Set, UpsertSetDto>(
 export const deleteSet = createAsyncThunk<Set['id'], DeleteSetDto>(
   'sets/delete',
   async ({ sessionId, id, sessionExerciseId }) => {
-    console.log('--- update sets');
     try {
       const apiClient = getApiClient();
       const response = await apiClient.delete<Set['id']>(
         `/sessions/${sessionId}/session-exercises/${sessionExerciseId}/sets/${id}`,
       );
-      console.log('--- res', response);
       return response;
     } catch (err: unknown) {
       const error = err as AxiosError;

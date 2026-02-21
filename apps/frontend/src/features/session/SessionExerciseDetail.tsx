@@ -248,9 +248,7 @@ export const SessionExerciseDetail: React.FC<ISessionExerciseDetail> = ({
   };
 
   useEffect(() => {
-    console.log('Ben oué');
     if (sessionExercise.comment) {
-      console.log('--- set comment', sessionExercise.comment);
       setComment(sessionExercise.comment);
     }
   }, [sessionExercise.comment]);

@@ -28,11 +28,13 @@ import {
   Typography,
 } from '@mui/material';
 import type { Session } from './types';
-import { formatDuration, intervalToDuration } from 'date-fns';
+import { format, formatDuration, intervalToDuration } from 'date-fns';
 import { GenericSelect } from '../../components/GenericSelect';
 import { useTranslation } from 'react-i18next';
 import { GenericMenu, type MenuItem } from '../../components/menu/GenericMenu';
 import { GenericModal } from '../../components/GenericModal';
+import { GenericDatePicker } from '../../components/GenericDatePicker';
+import dayjs from 'dayjs';
 // const ExercisesContainer = styled(Container)`
 //   flex: 1 1 auto;
 //   display: flex;
@@ -73,12 +75,24 @@ const AddExerciseContainer = styled(Box)`
   width: fit-content;
 `;
 
+const DateContainer = styled(Box)`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 1rem;
+  width: 100%;
+  padding-inline: 0.5rem;
+  margin-top: 0.5rem;
+  margin-bottom: 2rem;
+`;
+
 export const OngoingSession: React.FC = () => {
   const { t } = useTranslation();
   const session = useAppSelector(selectSession);
   const sessionExercises = useAppSelector(selectSessionExercises);
   const sessionSliceState = useAppSelector(selectSessionState);
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const { sessionId } = useParams();
   const [sessionName, setSessionName] = useState('');
   const [isEditSessionName, setIsEditSessionName] = useState(false);
@@ -88,13 +102,13 @@ export const OngoingSession: React.FC = () => {
     null,
   );
   const [isFinishedSession, setIsFinishedSession] = useState(true);
-  const { data: exercises = [] } = useGetExercisesQuery({
-    sportId: session?.sport?.id,
-  });
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [isDeleteSessionModalOpen, setIsDeleteSessionModalOpen] =
     useState(false);
-  const navigate = useNavigate();
+
+  const { data: exercises = [] } = useGetExercisesQuery({
+    sportId: session?.sport?.id,
+  });
 
   const menuItems: MenuItem[] = useMemo(
     () => [
@@ -157,7 +171,7 @@ export const OngoingSession: React.FC = () => {
             <TextField
               value={sessionName}
               onChange={e => setSessionName(e.target.value)}
-              label="Nom de la séance"
+              label={t('sessions.sessionName')}
             />
           ) : (
             <Typography variant="h4">{sessionName}</Typography>
@@ -172,18 +186,52 @@ export const OngoingSession: React.FC = () => {
     }
   };
 
-  const displaySessionDuration = (
+  const displaySessionDateInfo = (
     sessionStartDate: Session['startDate'],
     sessionEndDate: Session['endDate'],
   ) => {
-    const duration = intervalToDuration({
-      start: sessionStartDate,
-      end: sessionEndDate,
-    });
-    return <Typography>Durée : {formatDuration(duration)}</Typography>;
+    if (isFinishedSession) {
+      const duration = intervalToDuration({
+        start: sessionStartDate,
+        end: sessionEndDate,
+      });
+      return (
+        <StyledBox>
+          <Typography>
+            {`Date: ${format(sessionStartDate, 'dd/MM/y', {})}`}
+          </Typography>
+          <Typography>
+            {`Durée: ${formatDuration(duration, { format: ['hours', 'minutes'] })}`}
+          </Typography>
+        </StyledBox>
+      );
+    } else {
+      return (
+        <DateContainer>
+          <GenericDatePicker
+            value={dayjs(sessionStartDate)}
+            onChange={value => {
+              console.log('-----');
+              console.log(value);
+            }}
+            label={t('sessions.startDate')}
+            // size="small"
+          />
+          <GenericDatePicker
+            value={sessionEndDate ? dayjs(sessionEndDate) : null}
+            onChange={value => {
+              console.log(value);
+            }}
+            label={t('sessions.endDate')}
+            // size="small"
+          />
+        </DateContainer>
+      );
+    }
   };
 
   const displayAddExercise = () => {
+    // todo commmon exercise picker ?
     const exerciseList = exercises.filter(
       exercise =>
         !sessionExercises.find(
@@ -254,7 +302,6 @@ export const OngoingSession: React.FC = () => {
 
   useEffect(() => {
     if (sessionSliceState === SliceState.FINISHED && !session) {
-      console.log('session error');
       // todo redirect and display message
     }
   }, [sessionSliceState, session]);
@@ -275,11 +322,9 @@ export const OngoingSession: React.FC = () => {
           </IconButton>
         }
       >
-        <StyledBox>
-          {session?.endDate
-            ? displaySessionDuration(session.startDate, session.endDate)
-            : null}
-        </StyledBox>
+        {session
+          ? displaySessionDateInfo(session.startDate, session.endDate)
+          : null}
         {session &&
           sessionExercises?.map(sessionExercise => (
             <SessionExerciseDetail

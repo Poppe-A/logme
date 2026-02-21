@@ -77,7 +77,6 @@ export const NewSession: React.FC = () => {
   };
 
   const buildExerciseItems = (): ISelectItem[] => {
-    console.log('test');
     return exercises
       ? exercises
           .filter(

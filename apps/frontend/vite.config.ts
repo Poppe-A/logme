@@ -10,9 +10,9 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.ico', 'icon-192.png', 'icon-512.png'],
       manifest: {
-        name: 'Mon Application',
-        short_name: 'MonApp',
-        description: 'Description de votre application',
+        name: 'Logme',
+        short_name: 'Logme',
+        description: 'Trackez vos séances de travail',
         theme_color: '#000000',
         background_color: '#ffffff',
         display: 'standalone', // Cache la barre du navigateur

@@ -28,7 +28,7 @@
     "welcome": "Bienvenue"
   },
   "sports": {
-    "title": "Vos sports",
+    "title": "Mes sports",
     "add": "Ajouter un sport",
     "update": "Editer un sport",
     "name": "Nom",
@@ -75,6 +75,8 @@
     "deleteSessionText": "Vous vous apprêtez à supprimer la session. Cette action est irreversible.",
     "addSet": "Ajouter une Série",
     "saveSet": "Enregistrer la série",
+    "startDate": "Date de début",
+    "endDate": "Date de fin",
     "sets": {
       "set": "Série",
       "repetitions": "Répétitions",
