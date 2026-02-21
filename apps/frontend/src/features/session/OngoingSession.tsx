@@ -87,12 +87,13 @@ const DateContainer = styled(Box)`
 `;
 
 export const OngoingSession: React.FC = () => {
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const { t } = useTranslation();
   const session = useAppSelector(selectSession);
   const sessionExercises = useAppSelector(selectSessionExercises);
   const sessionSliceState = useAppSelector(selectSessionState);
-  const dispatch = useAppDispatch();
-  const navigate = useNavigate();
+
   const { sessionId } = useParams();
   const [sessionName, setSessionName] = useState('');
   const [isEditSessionName, setIsEditSessionName] = useState(false);
@@ -105,6 +106,12 @@ export const OngoingSession: React.FC = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [isDeleteSessionModalOpen, setIsDeleteSessionModalOpen] =
     useState(false);
+  const [startDate, setStartDate] = useState<Date>(
+    session?.startDate ?? dayjs().toDate(),
+  );
+  const [endDate, setEndDate] = useState<Date | null>(
+    session?.endDate ?? null, // maj
+  );
 
   const { data: exercises = [] } = useGetExercisesQuery({
     sportId: session?.sport?.id,
@@ -137,11 +144,13 @@ export const OngoingSession: React.FC = () => {
   };
 
   const endOrEditSession = () => {
+    // TODO nae, il faut un formulaire pour les dates et le nom de la session
     if (session) {
       dispatch(
         updateSession({
           sessionId: session.id,
-          endDate: session.endDate ? undefined : new Date(),
+          startDate: startDate,
+          endDate: endDate ?? dayjs().toDate(),
         }),
       );
     }
@@ -197,9 +206,7 @@ export const OngoingSession: React.FC = () => {
       });
       return (
         <StyledBox>
-          <Typography>
-            {`Date: ${format(sessionStartDate, 'dd/MM/y', {})}`}
-          </Typography>
+          <Typography>{`Date: ${format(startDate, 'dd/MM/y', {})}`}</Typography>
           <Typography>
             {`Durée: ${formatDuration(duration, { format: ['hours', 'minutes'] })}`}
           </Typography>
@@ -209,18 +216,24 @@ export const OngoingSession: React.FC = () => {
       return (
         <DateContainer>
           <GenericDatePicker
-            value={dayjs(sessionStartDate)}
+            value={dayjs(startDate)}
             onChange={value => {
               console.log('-----');
               console.log(value);
+              if (value) {
+                setStartDate(value.toDate());
+              }
             }}
             label={t('sessions.startDate')}
             // size="small"
           />
           <GenericDatePicker
-            value={sessionEndDate ? dayjs(sessionEndDate) : null}
+            value={endDate ? dayjs(endDate) : null}
             onChange={value => {
               console.log(value);
+              if (value) {
+                setEndDate(value.toDate());
+              }
             }}
             label={t('sessions.endDate')}
             // size="small"

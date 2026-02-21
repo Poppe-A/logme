@@ -1,11 +1,4 @@
-import {
-  Box,
-  Chip,
-  Container,
-  styled,
-  Typography,
-  type Theme,
-} from '@mui/material';
+import { Box, Container, styled, Typography } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '../../utils/store';
 import {
   getAllSession,
@@ -14,6 +7,11 @@ import {
 } from './sessionSlice';
 import { useEffect } from 'react';
 import { PageLayout } from '../../components/PageLayout';
+import {
+  ExercisesLine,
+  OngoingChip,
+  SessionItem,
+} from '../../components/session';
 import type { Session } from './types';
 import { useNavigate } from 'react-router-dom';
 import { MainActionButton } from '../../components/MainActionButton';
@@ -26,41 +24,6 @@ const SessionsContainer = styled(Container)`
   gap: 0.5rem;
   min-height: 0;
   padding-inline: 1rem;
-`;
-
-// POURQUOI MIN HEIGHT 0
-// Dans un parent flex en colonne, si le dernier enfant a height: auto par défaut, il peut dépasser le parent.
-// Flexbox en colonne requiert min-height: 0 sur le container pour que flex: 1 fonctionne comme prévu.
-// Sans ça, le navigateur calcule la hauteur comme “au moins le contenu”, et le parent dépasse 100vh.
-
-// interface IExerciseList {
-//   exercises: Exercise[];
-//   displayModal: (exercise: Exercise) => void;
-// }
-
-const SessionItem = styled(Container)<{ theme?: Theme }>(({ theme }) => ({
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'start',
-  padding: '1rem',
-  gap: '0.5rem',
-  cursor: 'pointer',
-  backgroundColor: theme?.palette.background.card, // Couleur personnalisée définie dans le thème
-  overflow: 'hidden',
-  borderRadius: '8px',
-}));
-
-const ExercisesLine = styled(Box)`
-  display: flex;
-  flex-direction: row;
-  gap: 1rem;
-  margin-top: 0.5rem;
-  width: 100%;
-  overflow-x: scroll;
-`;
-
-const OngoingChip = styled(Chip)`
-  margin-left: auto;
 `;
 
 const InfoLine = styled(Box)`
@@ -91,25 +54,11 @@ export const SessionList: React.FC = () => {
             <Typography>
               {new Date(session.startDate).toLocaleDateString()}
             </Typography>
-            {!session.endDate && (
-              <OngoingChip
-                label={t('sessions.ongoing')}
-                color="secondary"
-                size="small"
-              />
-            )}
+            {!session.endDate && <OngoingChip />}
           </InfoLine>
           <Typography variant="h6">{session.sport.name}</Typography>
           <Typography>{session.name}</Typography>
-          <ExercisesLine>
-            {session.sessionExercises?.map(sessionExercise => (
-              <Chip
-                key={sessionExercise.id}
-                label={sessionExercise.exercise.name}
-                size="small"
-              />
-            ))}
-          </ExercisesLine>
+          <ExercisesLine sessionExercises={session.sessionExercises} />
         </SessionItem>
       ));
     } else {

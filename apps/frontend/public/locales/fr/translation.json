@@ -2,7 +2,9 @@
   "common": {
     "confirm": "Confirmer",
     "cancel": "Annuler",
-    "date": "Date"
+    "date": "Date",
+    "loading": "Chargement...",
+    "error": "Une erreur est survenue"
   },
   "errors": {
     "expiredSession": "Session expirée. Veuillez vous reconnecter.",
@@ -25,7 +27,9 @@
     "account": "Profil"
   },
   "dashboard": {
-    "welcome": "Bienvenue"
+    "welcome": "Bienvenue",
+    "sessionsLastTenDays": "{{count}} séances ces 10 derniers jours",
+    "viewSession": "Voir la séance"
   },
   "sports": {
     "title": "Mes sports",
@@ -62,6 +66,7 @@
     "selectedExercises": "Exercices sélectionnés",
     "start": "Go !",
     "noSession": "Vous n'avez aucune session pour le moment",
+    "noSessionsForTheLastDays": "Vous n'avez enregistré aucune session au cour des 10 derniers jours",
     "previousSessions": "Afficher les résultats précédents",
     "previousSessionsHide": "Masquer les résultats précédents",
     "noSeries": "Vous n'avez aucune série pour le moment.",

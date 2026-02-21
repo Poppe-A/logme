@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Session } from './session.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { IsNull, LessThan, Not, Repository } from 'typeorm';
+import { IsNull, LessThan, MoreThanOrEqual, Not, Repository } from 'typeorm';
 import { User } from '../user/user.entity';
 import { Sport } from '../sport/sport.entity';
 import { CreateSessionDto, EditSessionDto } from './session.type';
@@ -15,7 +15,8 @@ export class SessionService {
     private sessionRepository: Repository<Session>,
     private sessionExerciseService: SessionExerciseService,
   ) {}
-
+  // todo il faut limiter le nombre de sessions sur la page
+  // il faut de la search sur les sessions
   async findById(id: Session['id']): Promise<Session> {
     const session = await this.sessionRepository.findOne({
       where: { id },
@@ -76,6 +77,26 @@ export class SessionService {
         sessionExercise.sets &&
         sessionExercise.sets.length > 0
       );
+    });
+  }
+
+  findLastTenDaysSessions(userId: User['id']): Promise<Session[]> {
+    const currentDate = new Date();
+    const dateSubTen = new Date(currentDate);
+    dateSubTen.setDate(dateSubTen.getDate() - 10);
+    console.log('uuu', userId, dateSubTen);
+    return this.sessionRepository.find({
+      where: { user: { id: userId }, startDate: MoreThanOrEqual(dateSubTen) },
+      order: { startDate: 'DESC' },
+      relations: { sport: true, sessionExercises: { exercise: true } },
+      select: {
+        sport: { name: true, id: true },
+        sessionExercises: {
+          id: true,
+          comment: true,
+          exercise: { name: true, id: true },
+        },
+      },
     });
   }
 

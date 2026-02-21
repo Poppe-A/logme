@@ -17,6 +17,7 @@ export interface UpdateSessionDto {
   sessionId: Session['id'];
   description?: Session['description'];
   name?: Session['name'];
+  startDate?: Date;
   endDate?: Date;
   exercises?: Exercise['id'][];
 }

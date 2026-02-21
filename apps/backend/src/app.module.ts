@@ -14,6 +14,7 @@ import { SessionModule } from './session/session.module';
 import { SessionExerciseModule } from './sessionExercise/sessionExerciseModule';
 import { SetModule } from './set/set.module';
 import { HealthModule } from './health/health.module';
+import { DataModule } from './data/data.module';
 
 @Module({
   imports: [
@@ -51,6 +52,7 @@ import { HealthModule } from './health/health.module';
     SessionExerciseModule,
     SetModule,
     HealthModule,
+    DataModule,
   ],
   controllers: [AppController],
   providers: [

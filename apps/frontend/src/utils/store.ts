@@ -11,6 +11,7 @@ import {
 } from 'react-redux';
 import { sportApi } from '../features/sport/sportApi';
 import { exerciseApi } from '../features/exercise/exerciseApi';
+import { dashboardApi } from '../features/dashboard/dashboardApi';
 import { createApiClient } from './axiosInstance';
 
 export const store = configureStore({
@@ -21,12 +22,14 @@ export const store = configureStore({
     [authApi.reducerPath]: authApi.reducer,
     [sportApi.reducerPath]: sportApi.reducer,
     [exerciseApi.reducerPath]: exerciseApi.reducer,
+    [dashboardApi.reducerPath]: dashboardApi.reducer,
   },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware().concat(
       authApi.middleware,
       sportApi.middleware,
       exerciseApi.middleware,
+      dashboardApi.middleware,
     ),
 });
 
