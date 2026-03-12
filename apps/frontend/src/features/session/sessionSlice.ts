@@ -95,17 +95,13 @@ export const getSession = createAsyncThunk<Session, Session['id']>(
 
 export const updateSession = createAsyncThunk<Session, UpdateSessionDto>(
   'session/update',
-  async ({ sessionId, startDate, endDate, exercises, description, name }) => {
+  async ({ sessionId, ...rest }) => {
     try {
       const apiClient = getApiClient();
       const response = await apiClient.patch<Session>(
         `/sessions/${sessionId}`,
         {
-          startDate,
-          endDate,
-          exercises,
-          description,
-          name,
+          ...rest,
         },
       );
 

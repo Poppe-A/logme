@@ -15,6 +15,8 @@ export interface CreateSessionDto {
 export interface EditSessionDto {
   name?: Session['name'];
   description?: Session['description'];
-  endDate?: Date;
+  startDate?: Session['startDate'];
+  endDate?: Session['endDate'];
   exercises?: Exercise['id'][];
+  isFinished?: Session['isFinished'];
 }

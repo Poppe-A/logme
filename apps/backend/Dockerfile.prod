@@ -9,7 +9,7 @@ RUN apk add --no-cache python3 make g++
 WORKDIR /app
 
 # Copier seulement les fichiers nécessaires pour le backend
-COPY apps/backend/package.json apps/backend/yarn.lock ./
+COPY package.json yarn.lock ./
 
 # Installer les dépendances (incluant devDependencies car nest et ts-node sont nécessaires)
 RUN yarn install --frozen-lockfile
@@ -18,12 +18,12 @@ RUN yarn install --frozen-lockfile
 ENV NODE_ENV=production
 
 # Copier le code source TypeScript (inclut start.sh)
-COPY apps/backend/ ./
+COPY . .
 
 # Rendre le script start.sh exécutable
 RUN chmod +x start.sh
 
-WORKDIR /app
+# WORKDIR /app
 
 # Entrypoint pour migrations + seeds + start
 CMD ["sh", "start.sh"]

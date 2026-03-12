@@ -1,15 +1,14 @@
-import React from 'react';
-import { Controller, type Control, type FieldValues } from 'react-hook-form';
+import { Controller, type Control, type FieldValues, type Path } from 'react-hook-form';
 
 import { NumberField } from '../NumberField';
 import type { NumberType } from '../types';
 import type { FieldSize, FieldWidth } from './types';
 import { FIELD_SIZE } from './constants';
 
-interface IFormNumberFieldProps {
-  name: string;
+interface IFormNumberFieldProps<TFieldValues extends FieldValues> {
+  name: Path<TFieldValues>;
   label: string;
-  control: Control<FieldValues>;
+  control: Control<TFieldValues>;
   numberOfDecimals?: number;
   numberType?: NumberType;
   size?: FieldSize;
@@ -17,7 +16,7 @@ interface IFormNumberFieldProps {
   disabled?: boolean;
 }
 
-export const FormNumberField: React.FC<IFormNumberFieldProps> = ({
+export const FormNumberField = <TFieldValues extends FieldValues>({
   name,
   control,
   numberOfDecimals = 0,
@@ -26,7 +25,7 @@ export const FormNumberField: React.FC<IFormNumberFieldProps> = ({
   size = FIELD_SIZE.MEDIUM,
   width,
   disabled,
-}) => {
+}: IFormNumberFieldProps<TFieldValues>) => {
   return (
     <Controller
       name={name}

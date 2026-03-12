@@ -3,6 +3,7 @@ import type { NumberType } from './types';
 import { StyledTextField } from './form/FormTextField';
 import type { FieldSize, FieldWidth } from './form/types';
 import { FIELD_SIZE } from './form/constants';
+import { removeLastsNullDecimals } from '../utils/format';
 
 interface INumberFieldProps {
   value: unknown;
@@ -94,15 +95,7 @@ export const NumberField: React.FC<INumberFieldProps> = ({
       .toFixed(numberOfDecimals)
       .replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
 
-    const decimalPart = Array.from(formattedValue.split('.')[1]);
-    if (!decimalPart.some(digit => digit !== '0')) {
-      return formattedValue.split('.')[0];
-    } else if (decimalPart[decimalPart.length - 1] === '0') {
-      const firstDecimalDigit = decimalPart[0];
-      return `${formattedValue.split('.')[0]}.${firstDecimalDigit}`;
-    }
-
-    return formattedValue;
+    return removeLastsNullDecimals(formattedValue);
   };
 
   useEffect(() => {

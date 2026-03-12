@@ -97,23 +97,19 @@ export const OngoingSession: React.FC = () => {
   const sessionSliceState = useAppSelector(selectSessionState);
 
   const { sessionId } = useParams();
-  const [sessionName, setSessionName] = useState('');
+  const [sessionName, setSessionName] = useState<Session['name']>(
+    session?.name ?? '',
+  );
   const [isEditSessionName, setIsEditSessionName] = useState(false);
   const [isAddingExercise, setIsAddingExercise] = useState(false);
   const [isContentDrawerOpen, setIsContentDrawerOpen] = useState(false);
   const [selectedExercise, setSelectedExercise] = useState<Exercise | null>(
     null,
   );
-  const [isFinishedSession, setIsFinishedSession] = useState(true);
+
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [isDeleteSessionModalOpen, setIsDeleteSessionModalOpen] =
     useState(false);
-  const [startDate, setStartDate] = useState<Date>(
-    session?.startDate ?? dayjs().toDate(),
-  );
-  const [endDate, setEndDate] = useState<Date | null>(
-    session?.endDate ?? null, // maj
-  );
 
   const { data: exercises = [] } = useGetExercisesQuery({
     sportId: session?.sport?.id,
@@ -145,35 +141,21 @@ export const OngoingSession: React.FC = () => {
     }, 200);
   };
 
-  const endOrEditSession = () => {
-    // TODO nae, il faut un formulaire pour les dates et le nom de la session
+  const updateOngoingSession = (sessionPartToUpdate: Partial<Session>) => {
     if (session) {
       dispatch(
-        updateSession({
-          sessionId: session.id,
-          startDate: startDate,
-          endDate: endDate ?? dayjs().toDate(),
-        }),
+        updateSession({ sessionId: session.id, ...sessionPartToUpdate }),
       );
     }
   };
 
-  const saveSessionName = () => {
-    if (session) {
-      if (isEditSessionName) {
-        dispatch(
-          updateSession({
-            sessionId: session.id,
-            name: sessionName,
-          }),
-        );
-      }
-      setIsEditSessionName(!isEditSessionName);
-    }
+  const editSessionName = (name: Session['name']) => {
+    updateOngoingSession({ name });
+    setIsEditSessionName(!isEditSessionName);
   };
 
   const displaySessionName = () => {
-    if (isFinishedSession) {
+    if (session?.isFinished) {
       return sessionName;
     } else {
       return (
@@ -188,7 +170,7 @@ export const OngoingSession: React.FC = () => {
             <Typography variant="h4">{sessionName}</Typography>
           )}
           {isEditSessionName && (
-            <IconButton onClick={saveSessionName}>
+            <IconButton onClick={() => editSessionName(sessionName)}>
               <Save />
             </IconButton>
           )}
@@ -201,14 +183,14 @@ export const OngoingSession: React.FC = () => {
     sessionStartDate: Session['startDate'],
     sessionEndDate: Session['endDate'],
   ) => {
-    if (isFinishedSession) {
+    if (session?.isFinished && sessionEndDate) {
       const duration = intervalToDuration({
         start: sessionStartDate,
         end: sessionEndDate,
       });
       return (
         <StyledBox>
-          <Typography>{`Date: ${format(startDate, 'dd/MM/y', {})}`}</Typography>
+          <Typography>{`Date: ${format(sessionStartDate, 'dd/MM/y', {})}`}</Typography>
           <Typography>
             {`Durée: ${formatDuration(duration, { format: ['hours', 'minutes'] })}`}
           </Typography>
@@ -218,27 +200,23 @@ export const OngoingSession: React.FC = () => {
       return (
         <DateContainer>
           <GenericDatePicker
-            value={dayjs(startDate)}
+            value={dayjs(sessionStartDate)}
             onChange={value => {
-              console.log('-----');
-              console.log(value);
               if (value) {
-                setStartDate(value.toDate());
+                updateOngoingSession({ startDate: value.toDate() });
               }
             }}
             label={t('sessions.startDate')}
-            // size="small"
           />
           <GenericDatePicker
-            value={endDate ? dayjs(endDate) : null}
+            value={session?.endDate ? dayjs(session.endDate) : null}
             onChange={value => {
-              console.log(value);
               if (value) {
-                setEndDate(value.toDate());
+                updateOngoingSession({ endDate: value.toDate() });
               }
             }}
             label={t('sessions.endDate')}
-            // size="small"
+            minDate={dayjs(sessionStartDate)}
           />
         </DateContainer>
       );
@@ -330,10 +308,6 @@ export const OngoingSession: React.FC = () => {
     }
   }, [sessionSliceState, session]);
 
-  useEffect(() => {
-    setIsFinishedSession(Boolean(session?.endDate));
-  }, [session]);
-
   return (
     <>
       <PageLayout
@@ -358,16 +332,19 @@ export const OngoingSession: React.FC = () => {
               onDisplayExerciseDetail={() =>
                 displayContentDrawer(sessionExercise.exercise)
               }
-              disabled={isFinishedSession}
+              disabled={session.isFinished}
             />
           ))}
-        {!isFinishedSession && (
+        {!session?.isFinished && (
           <AddExerciseContainer>{displayAddExercise()}</AddExerciseContainer>
         )}
         <MainActionButton
-          onClick={endOrEditSession}
+          onClick={() => {
+            console.log('putain', !session?.isFinished);
+            updateOngoingSession({ isFinished: !session?.isFinished });
+          }}
           icon={
-            session?.endDate ? (
+            session?.isFinished ? (
               <Edit fontSize="large" />
             ) : (
               <DoneAllOutlined fontSize="large" />

@@ -27,6 +27,8 @@ interface IDatePicker {
   onChange: (val: Dayjs | null) => void;
   label?: string;
   size?: 'small' | 'normal';
+  minDate?: Dayjs;
+  disabled?: boolean;
 }
 
 export const GenericDatePicker: React.FC<IDatePicker> = ({
@@ -34,6 +36,8 @@ export const GenericDatePicker: React.FC<IDatePicker> = ({
   onChange,
   label,
   size,
+  minDate,
+  disabled,
 }) => {
   const { t } = useTranslation();
   return (
@@ -45,8 +49,9 @@ export const GenericDatePicker: React.FC<IDatePicker> = ({
         label={label ?? t('common.date')}
         format="DD/MM/YYYY HH:mm"
         size={size}
+        minDateTime={minDate}
+        disabled={disabled}
       />
-      {/* <DateTimePicker /> */}
     </LocalizationProvider>
   );
 };

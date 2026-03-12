@@ -1,6 +1,7 @@
 import { Box, Divider, styled, Typography } from '@mui/material';
 import type { EarlierSessionForInformation } from './types';
 import { format } from 'date-fns';
+import { removeLastsNullDecimals } from '../../utils/format';
 
 const EarlierSessionContainer = styled(Box)`
   width: 100%;
@@ -51,8 +52,12 @@ export const PreviousSessionResults: React.FC<IPreviousSessionResults> = ({
         {earlierSessionResults.sets.map((set, index) => (
           <>
             <SetContainer key={set.id}>
-              <Typography>{set.repetitions} reps</Typography>
-              <Typography>{set.weight} kg</Typography>
+              <Typography>{`${set.repetitions} reps`}</Typography>
+              <Typography>
+                {`${removeLastsNullDecimals(
+                  set.weight ? set.weight.toString() : '0',
+                )} kg`}
+              </Typography>
             </SetContainer>
             {index < earlierSessionResults.sets.length - 1 && (
               <Divider orientation="vertical" flexItem />

@@ -23,6 +23,9 @@ export class Session {
   @Column({ name: 'start_date', type: 'datetime' })
   startDate: Date;
 
+  @Column({ name: 'is_finished', type: 'boolean', default: false })
+  isFinished: boolean;
+
   @Column({ name: 'end_date', type: 'datetime', nullable: true })
   endDate?: Date | null;
 

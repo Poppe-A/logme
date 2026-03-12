@@ -146,11 +146,8 @@ export class SessionService {
     sessionId: Session['id'],
     editSessionDto: EditSessionDto,
   ): Promise<Session | null> {
-    const endDate = editSessionDto.endDate ? new Date() : null;
-    console.log('ededed', endDate);
     await this.sessionRepository.update(sessionId, {
       ...editSessionDto,
-      endDate,
     });
     return this.findById(sessionId);
   }

@@ -25,10 +25,11 @@ export interface UpdateSessionDto {
 export interface Session {
   id: number;
   name: string;
-  description?: string;
+  isFinished: boolean;
   startDate: Date;
-  endDate: Date;
   sport: Sport;
+  endDate?: Date;
+  description?: string;
   sessionExercises?: SessionExercise[];
 }
 
