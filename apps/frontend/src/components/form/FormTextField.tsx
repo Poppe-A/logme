@@ -13,7 +13,7 @@ type StyledMobileProps = {
   width?: FieldWidth;
 };
 
-const StyledTextField = styled(TextField, {
+export const StyledTextField = styled(TextField, {
   shouldForwardProp: prop => prop !== 'width',
 })<StyledMobileProps>`
   min-width: 4rem;

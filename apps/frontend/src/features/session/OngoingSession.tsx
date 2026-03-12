@@ -20,6 +20,7 @@ import { useGetExercisesQuery, type Exercise } from '../exercise/exerciseApi';
 import { MainActionButton } from '../../components/MainActionButton';
 import { DoneAllOutlined, Edit, MoreVert, Save } from '@mui/icons-material';
 import {
+  Autocomplete,
   Box,
   Button,
   IconButton,
@@ -29,12 +30,13 @@ import {
 } from '@mui/material';
 import type { Session } from './types';
 import { format, formatDuration, intervalToDuration } from 'date-fns';
-import { GenericSelect } from '../../components/GenericSelect';
 import { useTranslation } from 'react-i18next';
 import { GenericMenu, type MenuItem } from '../../components/menu/GenericMenu';
 import { GenericModal } from '../../components/GenericModal';
 import { GenericDatePicker } from '../../components/GenericDatePicker';
 import dayjs from 'dayjs';
+import { StyledTextField } from '../../components/form/FormTextField';
+import { FIELD_SIZE, FIELD_WIDTH_KEY } from '../../components/form/constants';
 // const ExercisesContainer = styled(Container)`
 //   flex: 1 1 auto;
 //   display: flex;
@@ -254,24 +256,33 @@ export const OngoingSession: React.FC = () => {
 
     if (session && isAddingExercise && exerciseList.length) {
       const exercisesItems = exerciseList.map(exercise => ({
-        value: exercise.id,
+        value: exercise.id as number,
         label: exercise.name,
       }));
 
       return (
-        <GenericSelect
-          items={exercisesItems}
-          label={t('sessions.addSessionExercise')}
-          onChange={e => {
+        <Autocomplete
+          options={exercisesItems}
+          onChange={(_, value) => {
             dispatch(
               createSessionExercise({
                 sessionId: session.id,
-                exerciseId: e.target.value,
+                exerciseId: value?.value,
               }),
             );
             setIsAddingExercise(false);
           }}
-          handleOnBlur={() => setIsAddingExercise(false)}
+          onBlur={() => setIsAddingExercise(false)}
+          getOptionLabel={option => option.label}
+          renderInput={params => (
+            <StyledTextField
+              {...params}
+              variant="outlined"
+              label={t('sessions.addSessionExercise')}
+              size={FIELD_SIZE.MEDIUM}
+              width={FIELD_WIDTH_KEY.LARGE}
+            />
+          )}
         />
       );
     } else if (session && !isAddingExercise && exerciseList.length) {

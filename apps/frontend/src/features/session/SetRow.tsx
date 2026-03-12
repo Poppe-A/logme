@@ -5,6 +5,8 @@ import { FIELD_TYPE } from '../../components/form/types';
 import type { FormValue, ISetRow } from './types';
 import { Delete } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
+import { FormNumberField } from '../../components/form/FormNumberField';
+import { FIELD_WIDTH_KEY } from '../../components/form/constants';
 
 const StyledRow = styled(Box)`
   width: 100%;
@@ -42,7 +44,7 @@ export const SetRow = ({
             label={t('sessions.sets.repetitions')}
             size="small"
             control={control}
-            width="SMALL_MEDIUM" // todo use enum
+            width={FIELD_WIDTH_KEY.SMALL_MEDIUM}
             disabled={disabled}
           />
         )}
@@ -56,14 +58,14 @@ export const SetRow = ({
           max: { value: 9999, message: t('sessions.sets.weightMax') },
         }}
         render={({ field }) => (
-          <FormTextField
+          <FormNumberField
             name={field.name}
-            fieldType={FIELD_TYPE.NUMBER}
-            control={control}
             label={t('sessions.sets.weightLabel')}
+            numberOfDecimals={2}
             size="small"
-            width="SMALL_MEDIUM"
+            width={FIELD_WIDTH_KEY.SMALL_MEDIUM}
             disabled={disabled}
+            control={control}
           />
         )}
       />
