@@ -2,15 +2,12 @@ import { Box, Container, styled, Typography } from '@mui/material';
 import { useAppSelector } from '../../utils/store';
 import { selectUser } from '../auth/authSlice';
 import { PageLayout } from '../../components/PageLayout';
-import {
-  ExercisesLine,
-  OngoingChip,
-  SessionItem,
-} from '../../components/session';
+import { ExercisesLine, SessionItem } from '../../components/session';
 import { useTranslation } from 'react-i18next';
 import { useGetForDashboardQuery } from './dashboardApi';
 import { useNavigate } from 'react-router-dom';
 import type { Session } from '../session/types';
+import { GenericChip } from '../../components/GenericChip';
 
 const SessionsContainer = styled(Container)`
   flex: 1 1 auto;
@@ -67,7 +64,14 @@ export const Dashboard: React.FC = () => {
                     <Typography>
                       {new Date(session.startDate).toLocaleDateString()}
                     </Typography>
-                    {!session.endDate && <OngoingChip />}
+                    <GenericChip
+                      color={session.endDate ? 'primary' : 'secondary'}
+                      label={
+                        session.endDate
+                          ? t('sessions.finished')
+                          : t('sessions.ongoing')
+                      }
+                    />
                   </InfoLine>
                   <Typography variant="h6">{session.sport?.name}</Typography>
                   <Typography>{session.name}</Typography>

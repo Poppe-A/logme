@@ -7,15 +7,12 @@ import {
 } from './sessionSlice';
 import { useEffect } from 'react';
 import { PageLayout } from '../../components/PageLayout';
-import {
-  ExercisesLine,
-  OngoingChip,
-  SessionItem,
-} from '../../components/session';
+import { ExercisesLine, SessionItem } from '../../components/session';
 import type { Session } from './types';
 import { useNavigate } from 'react-router-dom';
 import { MainActionButton } from '../../components/MainActionButton';
 import { useTranslation } from 'react-i18next';
+import { GenericChip } from '../../components/GenericChip';
 
 const SessionsContainer = styled(Container)`
   flex: 1 1 auto;
@@ -51,13 +48,18 @@ export const SessionList: React.FC = () => {
       return sessions.map(session => (
         <SessionItem onClick={() => goToSession(session.id)} key={session.id}>
           <InfoLine>
-            <Typography>
+            <Typography color="text.secondary">
               {new Date(session.startDate).toLocaleDateString()}
             </Typography>
-            {!session.endDate && <OngoingChip />}
+            <GenericChip
+              color={session.endDate ? 'primary' : 'secondary'}
+              label={
+                session.endDate ? t('sessions.finished') : t('sessions.ongoing')
+              }
+            />
           </InfoLine>
-          <Typography variant="h6">{session.sport.name}</Typography>
-          <Typography>{session.name}</Typography>
+          <Typography variant="h6"> {session.name}</Typography>
+          <Typography color="text.secondary">{session.sport.name}</Typography>
           <ExercisesLine sessionExercises={session.sessionExercises} />
         </SessionItem>
       ));

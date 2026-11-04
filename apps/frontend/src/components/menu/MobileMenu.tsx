@@ -22,6 +22,7 @@ const PaddedBox = styled(Box)`
 
 const StyledBottomNavigation = styled(BottomNavigation)`
   padding-inline: 0.5rem;
+  background-color: ${({ theme }) => theme.palette.background.default};
 `;
 const StyledBottomNavigationAction = styled(BottomNavigationAction)`
   min-width: 0;

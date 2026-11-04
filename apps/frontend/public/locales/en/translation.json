@@ -49,11 +49,13 @@
     "secondAltName": "Nom alternatif 2",
     "description": "Description",
     "altNames": "Autres noms",
+    "videoLink": "Lien vidéo",
     "typeRequired": "Le type est requis"
   },
   "sessions": {
     "title": "Mes séances",
     "ongoing": "En cours",
+    "finished": "Terminée",
     "new": "Nouvelle séance",
     "sessionName": "Nom de la séance",
     "defaultName": "Nouvelle séance",

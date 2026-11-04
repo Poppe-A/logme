@@ -19,7 +19,7 @@ interface IOutlinedIconButton {
 const SyledIconButton = styled(IconButton)<{
   buttonColor: StyledIconButtonProps;
 }>(({ theme, buttonColor }) => ({
-  border: '1px solid',
+  // border: '1px solid',
   borderColor: theme.palette[buttonColor].main,
 }));
 
@@ -32,6 +32,13 @@ export const OutlinedIconButton: React.FC<
       disabled={disabled}
       buttonColor={color}
       className={className}
+      sx={{
+        boxShadow: 3, // Équivaut à elevation={3}
+        backgroundColor: 'background.paper', // Fond requis pour voir l'ombre
+        '&:hover': {
+          boxShadow: 5, // Élévation différente au survol si besoin
+        },
+      }}
     >
       {children}
     </SyledIconButton>

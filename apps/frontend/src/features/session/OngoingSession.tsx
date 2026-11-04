@@ -37,6 +37,7 @@ import { GenericDatePicker } from '../../components/GenericDatePicker';
 import dayjs from 'dayjs';
 import { StyledTextField } from '../../components/form/FormTextField';
 import { FIELD_SIZE, FIELD_WIDTH_KEY } from '../../components/form/constants';
+import { shortLocale } from '../../utils/format';
 // const ExercisesContainer = styled(Container)`
 //   flex: 1 1 auto;
 //   display: flex;
@@ -59,8 +60,9 @@ const StyledBox = styled(Box)`
   display: flex;
   flex-direction: column;
   align-items: start;
-  margin-bottom: 1rem;
+  margin-bottom: 2rem;
   padding-left: 2rem;
+  gap: 0.5rem;
 `;
 
 const EditableSessionName = styled(Box)`
@@ -143,6 +145,9 @@ export const OngoingSession: React.FC = () => {
 
   const updateOngoingSession = (sessionPartToUpdate: Partial<Session>) => {
     if (session) {
+      if (sessionPartToUpdate.isFinished && !session.endDate) {
+        sessionPartToUpdate.endDate = dayjs().toDate();
+      }
       dispatch(
         updateSession({ sessionId: session.id, ...sessionPartToUpdate }),
       );
@@ -167,7 +172,9 @@ export const OngoingSession: React.FC = () => {
               label={t('sessions.sessionName')}
             />
           ) : (
-            <Typography variant="h4">{sessionName}</Typography>
+            <Typography variant="h3" color="text.primary">
+              {sessionName}
+            </Typography>
           )}
           {isEditSessionName && (
             <IconButton onClick={() => editSessionName(sessionName)}>
@@ -190,9 +197,9 @@ export const OngoingSession: React.FC = () => {
       });
       return (
         <StyledBox>
-          <Typography>{`Date: ${format(sessionStartDate, 'dd/MM/y', {})}`}</Typography>
-          <Typography>
-            {`Durée: ${formatDuration(duration, { format: ['hours', 'minutes'] })}`}
+          <Typography color="text.secondary">{`Date: ${format(sessionStartDate, 'dd/MM/y', {})}`}</Typography>
+          <Typography color="text.secondary">
+            {`Durée: ${formatDuration(duration, { format: ['hours', 'minutes'], locale: shortLocale })}`}
           </Typography>
         </StyledBox>
       );
@@ -311,8 +318,8 @@ export const OngoingSession: React.FC = () => {
   return (
     <>
       <PageLayout
-        title={session?.sport.name}
-        subtitle={displaySessionName()}
+        title={displaySessionName()}
+        subtitle={session?.sport.name}
         isLoading={sessionSliceState !== SliceState.FINISHED}
         titleMenuButton={
           <IconButton onClick={openMenu}>

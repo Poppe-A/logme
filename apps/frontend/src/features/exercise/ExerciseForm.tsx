@@ -42,6 +42,7 @@ export const ExerciseForm: React.FC<IExerciseForm> = ({
       description: exercise?.description ?? '',
       altName: exercise?.altName ?? '',
       secondAltName: exercise?.secondAltName ?? '',
+      videoLink: exercise?.videoLink ?? '',
     },
   });
 
@@ -109,6 +110,12 @@ export const ExerciseForm: React.FC<IExerciseForm> = ({
           control={control}
           name="description"
           label={t('exercises.description')}
+          fieldType={FIELD_TYPE.TEXT}
+        />
+        <FormTextField
+          control={control}
+          name="videoLink"
+          label={t('exercises.videoLink')}
           fieldType={FIELD_TYPE.TEXT}
         />
       </FormContainer>

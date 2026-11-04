@@ -26,6 +26,7 @@
     "react-dom": "^19.1.0",
     "react-hook-form": "^7.63.0",
     "react-i18next": "^16.0.1",
+    "react-lite-youtube-embed": "^3.7.0",
     "react-redux": "^9.2.0",
     "react-router-dom": "^7.6.3",
     "vite-plugin-pwa": "^1.2.0",

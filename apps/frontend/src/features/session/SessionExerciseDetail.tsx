@@ -26,7 +26,7 @@ import {
 } from 'react-hook-form';
 import type { Set, UpsertSetDto } from '../set/types';
 import { SetRow } from './SetRow';
-import { Check, Delete, InfoOutline } from '@mui/icons-material';
+import { Check, Delete, InfoOutline, RepeatOne } from '@mui/icons-material';
 import { useEffect, useState, type MouseEvent } from 'react';
 import { PreviousSessionResults } from './PreviousSessionResults';
 import { OutlinedIconButton } from '../../components/OutlinedIconButton';
@@ -156,6 +156,8 @@ export const SessionExerciseDetail: React.FC<ISessionExerciseDetail> = ({
   const {
     control,
     handleSubmit,
+    getValues,
+    watch,
     formState: { isDirty },
   } = useForm<FormValue>({
     values: {
@@ -171,6 +173,14 @@ export const SessionExerciseDetail: React.FC<ISessionExerciseDetail> = ({
 
   const addEmptySet = () => {
     append({ repetitions: 0, weight: 0 });
+  };
+
+  const repeatLastSet = () => {
+    const sets = getValues().sets;
+    if (sets.length) {
+      const lastSet = sets[sets.length - 1];
+      append({ repetitions: lastSet.repetitions, weight: lastSet.weight });
+    }
   };
 
   const onDeleteSet = (index: number, setId?: Set['id']) => {
@@ -262,7 +272,7 @@ export const SessionExerciseDetail: React.FC<ISessionExerciseDetail> = ({
         id="panel1-header"
       >
         <AccordionSummaryContent>
-          <Typography variant="h5">
+          <Typography variant="h4">
             {capitalizeFirstLetter(sessionExercise.exercise.name)}
           </Typography>
           <Box component="span" onClick={displayExerciseDetails}>
@@ -288,7 +298,7 @@ export const SessionExerciseDetail: React.FC<ISessionExerciseDetail> = ({
               ))
             : null}
           <StyledBox>
-            <Typography variant="caption">
+            <Typography variant="caption" color="text.secondary">
               {t('sessions.commentCaption')}
             </Typography>
             <CommentLine>
@@ -323,6 +333,11 @@ export const SessionExerciseDetail: React.FC<ISessionExerciseDetail> = ({
               <Typography>{t('sessions.noSeries')}</Typography>
             )}
           </SetsContainer>
+          {watch().sets.length ? (
+            <OutlinedIconButton onClick={repeatLastSet}>
+              <RepeatOne />
+            </OutlinedIconButton>
+          ) : null}
           <ButtonsLine>
             {!disabled && (
               <OutlinedButtonContainer>
