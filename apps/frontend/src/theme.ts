@@ -15,7 +15,12 @@ const theme = createTheme({
         primary: {
           main: '#7f1a99',
         },
+        // secondary: {},
+        // text: {
+        //   secondary: '#444045',
+        // },
         background: {
+          default: '#161616',
           card: '#1e1e1e', // Gris foncé pour le mode dark
         },
       },
@@ -64,10 +69,10 @@ const theme = createTheme({
       fontWeight: 400,
       fontSize: '1.1rem',
     },
-    // h5: {
-    //   fontWeight: 600,
-    //   fontSize: '0.5rem',
-    // },
+    h5: {
+      fontWeight: 600,
+      fontSize: '1xzxzrem',
+    },
     button: {
       textTransform: 'none',
       fontWeight: 600,

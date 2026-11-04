@@ -1,14 +1,21 @@
 import { Box, Drawer, styled, Typography } from '@mui/material';
 import type { Exercise } from './exerciseApi';
-import { capitalizeFirstLetter } from '../../utils/format';
+import {
+  capitalizeFirstLetter,
+  getVideoIdFromYoutubeUrl,
+} from '../../utils/format';
+import LiteYouTubeEmbed from 'react-lite-youtube-embed';
+import 'react-lite-youtube-embed/dist/LiteYouTubeEmbed.css';
 
 const StyledDrawer = styled(Drawer)`
   & .MuiDrawer-paper {
     border-radius: 20px 20px 0 0;
-    background-color: transparent;
+    background-color: ${({ theme }) =>
+      theme.palette.background.default} !important;
   }
   & .MuiBackdrop-root {
     background-color: transparent;
+    background-color: #00000086;
   }
 `;
 const DrawerContentContainer = styled(Box)`
@@ -27,7 +34,7 @@ const DrawerContentLine = styled(Box)`
 `;
 
 const Description = styled(Typography)`
-  margin-top: 1rem;
+  margin-block: 1rem;
 `;
 
 interface IExerciseDrawer {
@@ -41,10 +48,15 @@ export const ExerciseDrawer: React.FC<IExerciseDrawer> = ({
   onClose,
   isOpen,
 }) => {
+  const videoId =
+    exercise?.videoLink && getVideoIdFromYoutubeUrl(exercise.videoLink);
+
   return (
     <StyledDrawer anchor={'bottom'} open={isOpen} onClose={onClose}>
       <DrawerContentContainer role="presentation">
-        <Typography>{capitalizeFirstLetter(exercise?.name || '')}</Typography>
+        <Typography variant="h4">
+          {capitalizeFirstLetter(exercise?.name || '')}
+        </Typography>
         {(exercise?.altName || exercise?.secondAltName) && ( // todo fonction pour rendre alt names
           <DrawerContentLine>
             <Typography variant="caption">(</Typography>
@@ -62,6 +74,7 @@ export const ExerciseDrawer: React.FC<IExerciseDrawer> = ({
             {capitalizeFirstLetter(exercise?.description || '')}
           </Description>
         )}
+        {videoId && <LiteYouTubeEmbed id={videoId} title="VideoEmbed" />}
       </DrawerContentContainer>
     </StyledDrawer>
   );

@@ -30,6 +30,9 @@ export class Exercise {
   @Column({ name: 'second_alt_name', type: 'varchar', nullable: true })
   secondAltName?: string;
 
+  @Column({ name: 'video_link', type: 'varchar', nullable: true })
+  videoLink?: string;
+
   @ManyToOne(() => Sport, (sport) => sport)
   @JoinColumn({ name: 'sport_id' })
   sport: Sport;

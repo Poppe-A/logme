@@ -6,6 +6,7 @@ import {
   CardHeader,
   Modal,
   styled,
+  Typography,
 } from '@mui/material';
 import { type MouseEventHandler, type PropsWithChildren } from 'react';
 import { useIsMobile } from '../hooks/useIsMobile';
@@ -75,7 +76,7 @@ export const GenericModal: React.FC<PropsWithChildren<IGenericModalProps>> = ({
   return (
     <StyledModal open={open} onClose={handleClose} isMobile={isMobile}>
       <ModalCard>
-        <CardHeader title={title} />
+        <CardHeader title={<Typography variant="h4">{title}</Typography>} />
         <CardBody>{children}</CardBody>
         <ButtonsContainer>
           <Button onClick={handleClose}>{t('common.cancel')}</Button>

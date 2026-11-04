@@ -16,7 +16,8 @@ export type Exercise = {
   type?: ExerciseType;
   description?: string;
   altName?: string;
-  secondAltName: string;
+  secondAltName?: string;
+  videoLink?: string;
 };
 
 interface IGetExercises {

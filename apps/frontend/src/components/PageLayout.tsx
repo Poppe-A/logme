@@ -11,7 +11,7 @@ import type { PropsWithChildren, ReactElement } from 'react';
 import { useNavigate } from 'react-router';
 
 interface IPageLayout {
-  title?: string;
+  title?: string | ReactElement;
   subtitle?: string | ReactElement;
   button?: ReactElement;
   isLoading?: boolean;
@@ -80,14 +80,18 @@ export const PageLayout: React.FC<PropsWithChildren<IPageLayout>> = ({
             <ArrowBack />
           </StyledIconButton>
         )}
-        {title && (
-          <TitleLine>
+        <TitleLine>
+          {title && typeof title === 'string' ? (
             <Title variant="h3">{title}</Title>
-            {titleMenuButton}
-          </TitleLine>
-        )}
+          ) : (
+            title
+          )}
+          {titleMenuButton}
+        </TitleLine>
         {subtitle && typeof subtitle === 'string' ? (
-          <Typography variant="h4">{subtitle}</Typography>
+          <Typography variant="h4" color="text.secondary">
+            {subtitle}
+          </Typography>
         ) : (
           subtitle
         )}
